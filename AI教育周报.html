@@ -1,0 +1,4041 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI EdTech News</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #F8FAFC;
+    color: #1E293B;
+    line-height: 1.6;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+    box-sizing: border-box;
+  }
+
+  /* ====== Header ====== */
+  .page-header {
+    text-align: center;
+    padding: 32px 20px 0;
+  }
+  .page-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1E293B;
+    letter-spacing: 0.3px;
+  }
+  .page-header .updated {
+    font-size: 13px;
+    color: #94A3B8;
+    margin-top: 6px;
+  }
+
+  /* ====== Tab Bar ====== */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    margin: 20px 0 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 0 4px;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748B;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+    transition: color 0.2s;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: #334155; }
+  .tab-btn.active {
+    color: #3B82F6;
+    font-weight: 600;
+  }
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 18px;
+    right: 18px;
+    height: 2px;
+    background: #3B82F6;
+    border-radius: 2px;
+  }
+  .tab-btn .tab-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+  .tab-dot.cat-a { background: #3B82F6; }
+  .tab-dot.cat-b { background: #10B981; }
+  .tab-dot.cat-c { background: #8B5CF6; }
+  .tab-dot.cat-d { background: #F59E0B; }
+  .tab-dot.cat-e { background: #EF4444; }
+  .tab-dot.cat-f { background: #06B6D4; }
+
+  .tab-divider-bar {
+    height: 1px;
+    background: #E2E8F0;
+    margin: 0 0 20px;
+  }
+
+  /* ====== Category Section (visible/hidden via JS) ====== */
+  .category-section { display: none !important; }
+  .category-section.visible { display: block !important; }
+
+  /* ====== 批次分隔 ====== */
+  .batch-divider {
+    border: none;
+    border-top: 1px dashed #CBD5E1;
+    margin: 20px 0;
+  }
+  .batch-label {
+    font-size: 14px;
+    color: #3B82F6;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+  .batch-label.old { color: #94A3B8; }
+
+  /* ====== 类别标题 ====== */
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #F1F5F9;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    border-left: 4px solid #3B82F6;
+  }
+  .category-header.cat-a { border-left-color: #3B82F6; }
+  .category-header.cat-b { border-left-color: #10B981; }
+  .category-header.cat-c { border-left-color: #8B5CF6; }
+  .category-header.cat-d { border-left-color: #F59E0B; }
+  .category-header.cat-e { border-left-color: #EF4444; }
+  .category-header.cat-f { border-left-color: #06B6D4; }
+  .category-header .cat-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #334155;
+    flex: 1;
+  }
+  .category-header .cat-count {
+    font-size: 13px;
+    color: #94A3B8;
+    background: #fff;
+    padding: 3px 10px;
+    border-radius: 10px;
+  }
+
+  /* ====== 时间线 ====== */
+  .timeline-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 2px;
+    position: relative;
+  }
+  .timeline-row.last-in-category { margin-bottom: 24px; }
+
+  .timeline-gutter {
+    flex-shrink: 0;
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    padding-top: 4px;
+    position: relative;
+  }
+  .timeline-gutter .date {
+    font-size: 12px;
+    color: #94A3B8;
+    line-height: 1;
+  }
+  .timeline-gutter .time {
+    font-size: 14px;
+    font-weight: 600;
+    color: #334155;
+    line-height: 1;
+  }
+  .timeline-gutter .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    position: absolute;
+    right: -20px;
+    top: 8px;
+    z-index: 2;
+  }
+  .dot-a { background: #3B82F6; }
+  .dot-b { background: #10B981; }
+  .dot-c { background: #8B5CF6; }
+  .dot-d { background: #F59E0B; }
+  .dot-e { background: #EF4444; }
+  .dot-f { background: #06B6D4; }
+
+  .timeline-row::after {
+    content: '';
+    position: absolute;
+    left: 88px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #E2E8F0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ====== 内容卡片 ====== */
+  .item-card {
+    flex: 1;
+    background: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stars {
+    font-size: 14px;
+    color: #F59E0B;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .stars .empty { color: #CBD5E1; }
+
+  /* ====== 标签 ====== */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 14px;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  .tag-subject { background: #EFF6FF; color: #2563EB; }
+  .tag-domain  { background: #ECFDF5; color: #059669; }
+  .tag-attr    { background: #F3E8FF; color: #9333EA; }
+  .tag-scene   { background: #FFEDD5; color: #EA580C; }
+
+  /* ====== 标题 ====== */
+  .item-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1E293B;
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  /* ====== 摘要 ====== */
+  .item-summary {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  /* ====== 推荐理由 ====== */
+  .item-reason {
+    background: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #166534;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+
+  /* ====== GitHub 额外字段 ====== */
+  .item-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #64748B;
+  }
+  .item-meta-row .gh-stars { color: #F59E0B; font-weight: 600; }
+  .item-meta-row .gh-lang {
+    background: #F1F5F9;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+  }
+
+  /* ====== 来源链接行 ====== */
+  .item-source-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 12px;
+    color: #94A3B8;
+  }
+  .item-source-line a {
+    color: #3B82F6;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .item-source-line a:hover { text-decoration: underline; }
+  .item-source-name {
+    color: #64748B;
+    flex-shrink: 0;
+  }
+
+  /* ====== 页脚 ====== */
+  .page-footer {
+    text-align: center;
+    padding: 24px 0 8px;
+    font-size: 12px;
+    color: #94A3B8;
+    line-height: 1.8;
+    border-top: 1px solid #E2E8F0;
+    margin-top: 32px;
+  }
+
+  /* ====== 响应式 ====== */
+  @media (max-width: 600px) {
+    .container { padding: 12px 10px 32px; }
+    .page-header { padding: 24px 16px 0; }
+    .page-header h1 { font-size: 20px; }
+    .tab-btn { padding: 8px 12px; font-size: 13px; }
+    .tab-btn.active::after { left: 12px; right: 12px; }
+    .timeline-gutter { width: 60px; }
+    .timeline-row::after { left: 68px; }
+    .timeline-gutter .dot { right: -12px; }
+    .timeline-row { gap: 10px; }
+    .item-card { padding: 12px 14px; }
+    .item-title { font-size: 15px; }
+    .item-summary { font-size: 13px; }
+    .category-header { padding: 10px 14px; }
+    .timeline-gutter .time { font-size: 13px; }
+  }
+
+  @media (max-width: 400px) {
+    .timeline-gutter { width: 50px; }
+    .timeline-row::after { left: 58px; }
+    .timeline-gutter .dot { right: -8px; }
+    .timeline-row { gap: 8px; }
+    .item-card { padding: 10px 12px; }
+    .tags { gap: 4px; }
+    .tag { font-size: 10px; padding: 2px 8px; }
+    .item-title { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ====== Header ====== -->
+  <div class="page-header">
+    <h1>AI EdTech News</h1>
+    <div class="updated">Updated: 2026-07-20 10:00</div>
+  </div>
+
+  <!-- ====== Tab Bar ====== -->
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="tab-a" onclick="switchTab('tab-a')">
+      <span class="tab-dot cat-a"></span>行业动态
+    </button>
+    <button class="tab-btn" data-tab="tab-b" onclick="switchTab('tab-b')">
+      <span class="tab-dot cat-b"></span>AI教育产品
+    </button>
+    <button class="tab-btn" data-tab="tab-c" onclick="switchTab('tab-c')">
+      <span class="tab-dot cat-c"></span>学术研究
+    </button>
+    <button class="tab-btn" data-tab="tab-d" onclick="switchTab('tab-d')">
+      <span class="tab-dot cat-d"></span>硬件
+    </button>
+    <button class="tab-btn" data-tab="tab-e" onclick="switchTab('tab-e')">
+      <span class="tab-dot cat-e"></span>政策
+    </button>
+    <button class="tab-btn" data-tab="tab-f" onclick="switchTab('tab-f')">
+      <span class="tab-dot cat-f"></span>GitHub教育项目
+    </button>
+  </div>
+  <div class="tab-divider-bar"></div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!--  TAB A · 行业动态                                   -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="category-section visible" id="tab-a">
+  
+  <!-- ====== 更新批次 ====== -->
+
+<div class="batch-label">🔵 更新 · 07-20  +12 条（WAIC 2026全国首个国际智慧教育平台 + Anthropic Claude for Teachers全美K-12免费 + 上海师大智身课堂AI艺术教育评价 + 欧盟OECD中小学AI素养框架 + 16款AI教育产品半年盘点 + AI辅导反馈策略大规模实证 + GitHub hello-algo 122K + generative-ai-for-beginners 105K + LLMs-from-scratch 87K）</div>
+
+<div class="batch-label">🔵 更新 · 07-13  +16 条（教育"十五五"规划 + Quizlet嵌入Google Classroom + OpenAI哈萨克斯坦84,000教师培训 + 学而思T6全平台开售 + 微软AI Agent零基础课53K Star + Anthropic学习模式 + Lucida AI口语700万美元融资 + LectūraAgents多智能体教学框架）</div>
+
+<div class="batch-label">🔵 更新 · 07-12  +11 条（网易获国家科技进步奖 + 快造科技10亿融资好未来跟投 + 天立启鸣入选AI for Good + LingoAce Tutor Luna + 美国拟禁儿童AI玩具 + 上海科技教育指南 + GitHub教育项目）</div>
+
+<div class="batch-label">🔵 更新 · 07-09  +7 条（upGrad收购Unacademy获CCI批准 + H1全球教育投融资全景 + 深圳龙岗鸿蒙AI教育全场景落地 + 百度文心学习功能 + 鸿蒙墨水屏终端 + GitHub教育项目）</div>
+
+<div class="batch-label">🔵 更新 · 07-06  +7 条（26000名学生AI学习代价重磅研究 + Google纽约教育峰会 + 学而思T6旗舰学习机 + CHEPP高等教育报告 + GitHub教育项目）</div>
+
+<div class="batch-label">🔵 更新 · 07-02  +9 条（"十五五"规划 + Microsoft年度报告 + Grant Sanderson数学观 + 全球教育AI新政策）</div>
+
+  <div class="batch-label">🔵 更新 · 06-26  +12 条（6月权威渠道深度更新）</div>
+
+
+  <div class="batch-label">🔵 更新 · 06-29  +15 条（ISTE 2026 余热 + 中国教育 AI 转型 + Coursera-Udemy 合并）</div>
+  <div class="category-header cat-a">
+    <span class="cat-name">A · 行业动态</span>
+    <span class="cat-count">46 条</span>
+  </div>
+
+  <!-- [BATCH-0720] WAIC 2026 全国首个国际智慧教育平台发布 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-19</span>
+      <span class="time">14:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-domain">教育垂直模型</span>
+      </div>
+      <div class="item-title">WAIC 2026重磅：全国首个国际智慧教育平台"上海人工智能教育(国际)平台"发布</div>
+      <div class="item-desc">WAIC 2026国际人工智能教育论坛发布全国首个面向基础教育的国际智慧教育平台，采用"云+端+边+智"架构，整合云端算力、终端交互、实训硬件与智能模型，希沃为核心共建单位，已在上海基础教育试点并面向"一带一路"推广。</div>
+      <div class="item-recommend">💡 推荐理由：国家级AI教育平台首发，"中国方案"向全球输出K12实践路径</div>
+      <div class="item-source">📍 来源：极目新闻 / WAIC 2026 · 2026-07-19</div>
+      <div class="item-link"><a href="https://www.163.com/dy/article/L29IG4UP053469LG.html" target="_blank" rel="noopener">https://www.163.com/dy/article/L29IG4UP053469LG.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0720] 头部公司发布16款AI教育产品半年盘点 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-16</span>
+      <span class="time">08:39</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">好未来</span>
+        <span class="tag tag-subject">科大讯飞</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">2026上半年头部公司发布16款AI教育产品：学生赛道占半数，高考志愿成新战场</div>
+      <div class="item-desc">36氪多鲸盘点显示，上半年好未来、科大讯飞、新东方、猿辅导、网易有道等头部公司共发布16款AI教育产品，学生赛道占50%，高考志愿填报Agent首次成为集中爆发的全新场景。</div>
+      <div class="item-recommend">💡 推荐理由：H1 AI教育产品全景图，学生赛道拥挤、高考志愿Agent成新增长点</div>
+      <div class="item-source">📍 来源：36氪·多鲸 · 2026-07-16</div>
+      <div class="item-link"><a href="https://36kr.com/p/3896740815062658" target="_blank" rel="noopener">https://36kr.com/p/3896740815062658</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] Elevate Education 获 WestBridge Capital 1.7亿卢比D轮融资 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-08</span>
+      <span class="time">12:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Elevate Education</span>
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">印度 Elevate Education（原Sunstone）获WestBridge Capital 1.7亿卢比D轮融资，深度加码AI集成</div>
+      <div class="item-desc">印度高等教育平台Elevate Education（原Sunstone）完成WestBridge Capital领投1.7亿卢比Series D融资，资金用于AI能力深化与技术平台扩张，覆盖22所合作院校、瞄准FY27营收3亿卢比。</div>
+      <div class="item-recommend">💡 推荐理由：印度B2B2C EdTech模式获资本认可，AI作为运营层而非单一功能</div>
+      <div class="item-source">📍 来源：Pivot News · 2026-07-08</div>
+      <div class="item-link"><a href="https://pivotnews.ai/education/elevate-education-170-cr-funding-ai" target="_blank" rel="noopener">https://pivotnews.ai/education/elevate-education-170-cr-funding-ai</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] OpenAI与哈萨克斯坦扩大AI教育合作 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-07</span>
+      <span class="time">14:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">OpenAI</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-attr">出海</span>
+      </div>
+      <div class="item-title">OpenAI与哈萨克斯坦扩大AI教育合作：84,000名教师完成培训，首月发送150万条提示词</div>
+      <div class="item-desc">OpenAI与哈萨克斯坦人工智能与数字发展部、科教部签署的ChatGPT Edu备忘录进入第二阶段。已向全国教育机构发放16.5万份许可，84,000余名教师完成AI准备培训，9/10认为对工作有用，44,000名活跃教师首月发送150万条提示词。</div>
+      <div class="item-recommend">💡 推荐理由：首个中亚国家级ChatGPT Edu大规模部署，教师培训与渗透率数据完整</div>
+      <div class="item-source">📍 来源：中亚科讯 / OpenAI Education · 2026-07-07</div>
+      <div class="item-link"><a href="https://www.toutiao.com/article/7659608810742497830" target="_blank" rel="noopener">https://www.toutiao.com/article/7659608810742497830</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] 题渊科技近千万元天使轮融资 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-01</span>
+      <span class="time">20:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">题渊科技</span>
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-scene">高等教育</span>
+        <span class="tag tag-domain">个性化学习</span>
+      </div>
+      <div class="item-title">AI教育企业题渊科技获近千万元天使轮融资，为4000万大学生提供一站式备考AI助手</div>
+      <div class="item-desc">广州题渊网络科技完成宏泰智慧谷近千万元天使轮融资，自研高校教育类垂直大模型融合1000万+题目数据、10万+结构化知识点，解题准确率95%+，覆盖考研、考公、专升本、四六级等赛道。</div>
+      <div class="item-recommend">💡 推荐理由：AI Agent平台+垂直教育大模型切入大学生备考，破解"不可能三角"</div>
+      <div class="item-source">📍 来源：36氪硬氪首发 · 2026-07-01</div>
+      <div class="item-link"><a href="https://www.toutiao.com/article/7657530022332301839/" target="_blank" rel="noopener">https://www.toutiao.com/article/7657530022332301839/</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] Lucida AI 700万美元种子轮 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-02</span>
+      <span class="time">23:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-domain">口语评测</span>
+        <span class="tag tag-domain">语音AI</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">Lucida AI完成700万美元种子轮融资，AI口语学习累计22亿分钟语音互动</div>
+      <div class="item-desc">专注口语流利度的语言学习公司Lucida AI获Velocity Capital领投700万美元种子轮。专有语音语言模型（SLM）让用户无需文本提示即可对话，15个月累计300万用户、22亿分钟语音互动，ARR突破七位数。</div>
+      <div class="item-recommend">💡 推荐理由：语音语言模型+口语流利度切入语言学习差异化赛道</div>
+      <div class="item-source">📍 来源：多知网 · 2026-07-02</div>
+      <div class="item-link"><a href="https://www.toutiao.com/article/7657950769966006834" target="_blank" rel="noopener">https://www.toutiao.com/article/7657950769966006834</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] 佛州学区因OpenAI诉讼重新评估AI工具 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-10</span>
+      <span class="time">16:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">OpenAI</span>
+        <span class="tag tag-attr">安全/对齐</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">佛州对OpenAI诉讼震动教育界：学区重新评估教室AI工具清单与责任界定</div>
+      <div class="item-desc">佛州对OpenAI的诉讼指控ChatGPT辅助大规模枪击案，引发学区紧急反应。佛州学区重新评估教室AI工具清单，州教育厅审查现有AI政策是否提供充分责任保护。每位美国学区董事会都在关注此案。</div>
+      <div class="item-recommend">💡 推荐理由：AI公司责任边界争议将重塑K-12 AI工具采购决策</div>
+      <div class="item-source">📍 来源：Singularity Kiwi / EdSurge · 2026-07-10</div>
+      <div class="item-link"><a href="https://singularity.kiwi/daily-aied-june-3-2026" target="_blank" rel="noopener">https://singularity.kiwi/daily-aied-june-3-2026</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] 网易联合浙大自研AI技术获国家科技进步奖 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-08</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">网易有道</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-domain">大模型</span>
+      </div>
+      <div class="item-title">网易联合浙大自研AI技术获国家科学技术进步奖二等奖，有道子曰大模型底层创新获国家级认可</div>
+      <div class="item-desc">网易联合浙江大学完成的"智能化三维数字人制作关键技术及应用"荣获国家科技进步奖二等奖。有道依托自研子曰大模型，正从教育垂类向AI生产力工具全面转型。</div>
+      <div class="item-recommend">💡 推荐理由：教育科技公司底层AI技术获国家级最高科技奖项认可，标志性事件</div>
+      <div class="item-source">📍 来源：科技日报 · 2026-07-11</div>
+      <div class="item-link"><a href="https://www.stdaily.com/web/gdxw/2026-07/11/content_545946.html" target="_blank" rel="noopener">https://www.stdaily.com/web/gdxw/2026-07/11/content_545946.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] 快造科技10亿融资好未来战投跟投 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-08</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">好未来</span>
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-scene">STEAM</span>
+      </div>
+      <div class="item-title">快造科技完成10亿元C轮融资好未来战投跟投，消费级3D打印向STEAM教育场景渗透</div>
+      <div class="item-desc">消费级3D打印企业快造科技(Snapmaker)完成10亿元C轮融资，凯辉基金领投，好未来战投跟投。好未来的战略入局暗示3D打印在STEAM教育及创客培养领域的广阔应用前景。</div>
+      <div class="item-recommend">💡 推荐理由：教育巨头战略跟投3D打印，STEAM教育硬件赛道获10亿级资金注入</div>
+      <div class="item-source">📍 来源：新浪财经 · 2026-07-08</div>
+      <div class="item-link"><a href="https://cj.sina.com.cn/articles/view/3307324252/c521c35c02002gl9w" target="_blank" rel="noopener">https://cj.sina.com.cn/articles/view/3307324252/c521c35c02002gl9w</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] 天立启鸣AI+教育入选ITU AI for Good -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-09</span>
+      <span class="time">16:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">天立启鸣</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">天立启鸣"AI驱动的个性化公平学习路径"入选ITU AI for Good创新案例集，中国K12教育AI获国际组织认可</div>
+      <div class="item-desc">联合国国际电信联盟(ITU)2026年"AI for Good"全球峰会公布年度创新影响力案例集，天立启鸣学科大脑入选，为农村学生、留守儿童提供AI个性化学习路径，缩小城乡教育差距。</div>
+      <div class="item-recommend">💡 推荐理由：中国教育AI方案首次获ITU国际组织认可，标志从技术应用迈向全球治理</div>
+      <div class="item-source">📍 来源：芥末堆 · 2026-07-09</div>
+      <div class="item-link"><a href="https://dy.163.com/article/L1LE2B61051987V2.html" target="_blank" rel="noopener">https://dy.163.com/article/L1LE2B61051987V2.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] 好未来小精龙入选北京市AI赋能行业典型案例 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-09</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">好未来</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">好未来"小精龙"多模态智能体学伴平台入选北京市AI赋能行业典型案例，学生专属AI获官方认可</div>
+      <div class="item-desc">2026全球数字经济大会发布《北京市AI赋能行业典型案例》，好未来小精龙作为智能教育代表入选。小精龙整合长期记忆、学情诊断、教育Skill链与情感陪伴，为学生提供全流程AI伴学。</div>
+      <div class="item-recommend">💡 推荐理由：教育AI智能体产品获地方政府典型案例认证，政企协同推动AI落地</div>
+      <div class="item-source">📍 来源：多知网 · 2026-07-09</div>
+      <div class="item-link"><a href="http://www.duozhi.com/industry/insight/2026070918614.shtml" target="_blank" rel="noopener">http://www.duozhi.com/industry/insight/2026070918614.shtml</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] 中公教育AI就业学习机销量超万台 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-10</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">中公教育</span>
+        <span class="tag tag-attr">商业化</span>
+        <span class="tag tag-scene">职业教育</span>
+      </div>
+      <div class="item-title">中公教育AI就业学习机销量超万台，AI面试小程序用户突破30万人次，职业教育AI商业化初见成效</div>
+      <div class="item-desc">中公教育披露成绩单：AI就业学习机销量超万台，AI面试小程序用户突破30万。成立职业规划研究院，云信大模型融合第三方大模型打造"测评-规划-学习-求职"一站式服务体系。</div>
+      <div class="item-recommend">💡 推荐理由：职教龙头AI硬件商业化里程碑，万台销量验证市场需求</div>
+      <div class="item-source">📍 来源：多知网 · 2026-07-10</div>
+      <div class="item-link"><a href="https://k.sina.com.cn/article_5953189932_162d6782c06704mdb2.html" target="_blank" rel="noopener">https://k.sina.com.cn/article_5953189932_162d6782c06704mdb2.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0709] upGrad收购Unacademy获CCI批准 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-07</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">upGrad</span>
+        <span class="tag tag-attr">并购</span>
+        <span class="tag tag-scene">职业教育</span>
+      </div>
+      <div class="item-title">印度最大教育科技合并案：upGrad收购Unacademy获CCI批准，打造K12到终身学习平台</div>
+      <div class="item-desc">印度竞争委员会(CCI)批准upGrad全股收购Unacademy母公司Sorting Hat Technologies，清除最后监管障碍。合并后覆盖K12备考到高等/职业教育全链条，标志印度EdTech进入"规模+盈利"成熟整合期。</div>
+      <div class="item-recommend">💡 推荐理由：印度EdTech最大合并案落地，全球教育科技行业整合进入加速通道</div>
+      <div class="item-source">📍 来源：YourStory</div>
+      <div class="item-link"><a href="https://yourstory.com/2026/07/cci-clears-upgrad-acquisition-of-unacademy-edtech" target="_blank" rel="noopener">https://yourstory.com/2026/07/cci-clears-upgrad-acquisition-of-unacademy-edtech</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0709] H1 2026全球教育行业52起融资并购 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-07</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-domain">AI硬件</span>
+      </div>
+      <div class="item-title">H1 2026全球教育行业52起融资并购全景：AI学习工具融资最多，7家企业冲刺IPO</div>
+      <div class="item-desc">多鲸联合36氪发布半年报：全球52起融资并购中，AI学习工具以13起居首，AI硬件/机器人9起成资金集中赛道。中国34起领先全球，智谱港股上市成首个大模型IPO。资本从应用散投转向终端入口+底层能力+场景闭环综合评估。</div>
+      <div class="item-recommend">💡 推荐理由：半年全景数据揭示教育AI资本流向：硬件吸金、应用验证、IPO加速</div>
+      <div class="item-source">📍 来源：36Kr · 多鲸</div>
+      <div class="item-link"><a href="https://eu.36kr.com/en/p/3884251152412929" target="_blank" rel="noopener">https://eu.36kr.com/en/p/3884251152412929</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0709] 深圳龙岗鸿蒙AI教育全场景落地 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-05</span>
+      <span class="time">14:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">华为</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-domain">鸿蒙</span>
+      </div>
+      <div class="item-title">深圳龙岗"鸿蒙+AI for教育"全场景落地：700所学校向113家企业开放AI教育场景</div>
+      <div class="item-desc">龙岗区将全区近700家办学单位整体向AI企业开放，教育局与华为、飞象星球等8家企业签约"AI教育应用共创伙伴"。发布"龙老师"全系列IP产品矩阵，已覆盖57所中小学，累计AI辅导超18.5万次，批改试题166.3万道。</div>
+      <div class="item-recommend">💡 推荐理由：全国首个全区级"鸿蒙+AI教育"中试基地，政企校共创模式开辟新路径</div>
+      <div class="item-source">📍 来源：中国新闻周刊 · 吕雪良</div>
+      <div class="item-link"><a href="https://www.inewsweek.cn/observe/2026-07-08/30985.shtml" target="_blank" rel="noopener">https://www.inewsweek.cn/observe/2026-07-08/30985.shtml</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0706] Google纽约AI教育峰会 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-01</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Google纽约举办AI教育峰会：150位教育与行业领袖共议AI时代"人类技能"</div>
+      <div class="item-desc">Google联合NYC Jobs CEO Council和Urban Assembly在纽约举办AI教育峰会，150位领袖参会。核心共识：AI时代适应力、协作和批判判断等"人类技能"不可替代，隐私与公平准入不可妥协，创新须与学校同行而非绕行。</div>
+      <div class="item-recommend">💡 推荐理由：巨头联合教育界举办峰会，强调AI时代人类技能的核心地位</div>
+      <div class="item-source">📍 来源：Google Blog · Steven Butschi</div>
+      <div class="item-link"><a href="https://blog.google/products-and-platforms/products/education/nyc-ai-summit/" target="_blank" rel="noopener">https://blog.google/products-and-platforms/products/education/nyc-ai-summit/</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0702] Grant Sanderson AI与数学的未来 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-30</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">数学辅导</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">3Blue1Brown创始人Grant Sanderson谈AI与数学的未来</div>
+      <div class="item-desc">3Blue1Brown创办人Grant Sanderson正在制作记录AI在数学领域进展的新项目。他指出AI在IMO获金牌并不等于AGI，只是又一个被攻克的基准。他强调即使AI未超越人类，仍能改变数学的学习和发现方式。</div>
+      <div class="item-recommend">💡 推荐理由：全球最知名数学教育者视角，对AI辅助数学教学有重要启发意义</div>
+      <div class="item-source">📍 来源：Dwarkesh Patel Podcast</div>
+      <div class="item-link"><a href="https://www.dwarkesh.com/p/grant-sanderson-2" target="_blank" rel="noopener">https://www.dwarkesh.com/p/grant-sanderson-2</a></div>
+    </div>
+  </div>
+  <!-- [BATCH-0702] 国务院印发《教育发展"十五五"规划》 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-29</span>
+      <span class="time">09:27</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">教育垂直模型</span>
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">国务院印发《教育发展"十五五"规划》，推进人工智能全学段教育</div>
+      <div class="item-desc">国务院印发规划，要求推进人工智能全学段教育，提升学生AI素养及提出问题解决问题的能力。完善科学教育体系，强化科技与人文教育协同，加大拔尖创新人才自主培养力度，目标到2030年高质量教育体系基本建成。</div>
+      <div class="item-recommend">💡 推荐理由：国家顶层设计首次将AI教育纳入十五五规划，标志着教育AI进入全学段强制普及阶段</div>
+      <div class="item-source">📍 来源：IT之家</div>
+      <div class="item-link"><a href="https://www.ithome.com/0/970/097.htm" target="_blank" rel="noopener">https://www.ithome.com/0/970/097.htm</a></div>
+    </div>
+  </div>
+  <!-- [BATCH-0702] Raise Us $1B Worker Retraining -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-27</span>
+      <span class="time">12:25</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Amazon</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-scene">职业教育</span>
+      </div>
+      <div class="item-title">"Raise Us"启动：前美商务部长联合四州筹集10亿美元应对AI就业冲击</div>
+      <div class="item-desc">前美国商务部长Raimondo与前印第安纳州长Holcomb发起非营利"Raise Us"，目标为AI经济下工人再培训筹集10亿美元，已锁定5亿。Amazon、Anthropic、Microsoft、OpenAI等支持，将在四州试点AI职业导航和工资保险。</div>
+      <div class="item-recommend">💡 推荐理由：AI巨头联合投入10亿级再培训基金，标志着职业教育领域公私合作新模式</div>
+      <div class="item-source">📍 来源：The Decoder</div>
+      <div class="item-link"><a href="https://the-decoder.com/the-companies-most-likely-to-automate-your-job-are-now-funding-a-1-billion-program-to-retrain-you" target="_blank" rel="noopener">https://the-decoder.com/...$1-billion-program-to-retrain-you</a></div>
+    </div>
+  </div>
+<!-- [BATCH-0629] OpenAI ChatGPT Futures Class of 2026 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-25</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Google ISTELive 2026：教师主导AI时代来临，Classroom全面集成Gemini</div>
+      <div class="item-desc">Google 在 ISTELive 2026 发布 Classroom 教师主导AI活动、Guided Learning模式、Focus Mode 屏幕锁定、MCP Server 开放平台等全系列教育AI更新，强调“教师主导，AI辅助”理念。</div>
+      <div class="item-recommend">💡 推荐理由：Google 教育AI战略从工具转向生态，MCP开放将重塑EdTech集成范式</div>
+      <div class="item-source">📍 来源：Google for Education Blog</div>
+      <div class="item-link"><a href="https://blog.google/products-and-platforms/products/education/iste-2026-educator-updates/" target="_blank" rel="noopener">https://blog.google/products-and-platforms/products/education/iste-2026-educator-updates/</a></div>
+    </div>
+  </div>
+
+  <!-- [JUNE] Microsoft 发布第三版 AI in Educatio -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-25</span>
+      <span class="time">14:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">阿里</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-attr">商业化</span>
+        <span class="tag tag-scene">考试备考</span>
+      </div>
+      <div class="item-title">千问免费高考志愿报告发放量突破 1000 万份，AI 教育产品大规模落地里程碑</div>
+      <div class="item-summary">千问高考志愿填报服务免费报告发放量突破 1000 万份，在高考季成为考生和家长的重要决策辅助工具，标志着 AI 教育产品在中国市场大规模落地的重要里程碑。</div>
+      <div class="item-reason">💡 推荐理由：千万级用户规模验证了 AI+高考赛道的产品市场匹配度</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 芥末堆 / 千问APP</span>
+        <a href="https://mp.weixin.qq.com/s/u5YYWrdoAU2rFkkhFixLig" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Google ISTE Teacher -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-24</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">微软</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Microsoft 发布第三版 AI in Education Report：92%学生已使用AI</div>
+      <div class="item-desc">微软年度教育AI报告显示92%学生、88%教师已使用AI；58%学校正在实施或规模化AI；87%师生同意AI技能对未来至关重要；同步发布Unit Plans、Copilot Notebooks等新工具。</div>
+      <div class="item-recommend">💡 推荐理由：全球教育AI采用率关键数据点，为行业决策提供基准参考</div>
+      <div class="item-source">📍 来源：Microsoft News</div>
+      <div class="item-link"><a href="https://news.microsoft.com/source/2026/06/24/microsofts-new-ai-in-education-report-highlights-widespread-adoption-and-increasing-demand-for-support" target="_blank" rel="noopener">https://news.microsoft.com/source/2026/06/24/microsofts-new-ai-in-education-report-highlights-widespread-adoption-and-increasing-demand-for-support</a></div>
+    </div>
+  </div>
+
+  <!-- [JUNE] 5W 发布首个 EdTech AI Visibility I -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-20</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Coursera</span>
+        <span class="tag tag-attr">并购</span>
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">Coursera 完成与 Udemy 合并：AI 课程需求创新高，重塑在线技能平台格局</div>
+      <div class="item-summary">Coursera 5 月 11 日完成与 Udemy 的合并后，6 月披露 AI 相关课程需求创历史新高。合并后的公司将整合"技能发现-培养-认证"全链路，结合 Coursera 的学位与认证优势与 Udemy 的实战课程库，主打 AI 时代"再技能化"市场。</div>
+      <div class="item-reason">💡 推荐理由：在线教育两大头部合并落地，AI 时代再技能化赛道进入双寡头时代</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 BusinessWire / Whalesbook</span>
+        <a href="https://www.businesswire.com/news/home/20260511605128/en/Coursera-Completes-Combination-with-Udemy-to-Build-the-Worlds-Most-Comprehensive-Skills-Platform" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0629] Wharton Personalized AI Tutor Study -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-12</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">51Talk</span>
+        <span class="tag tag-domain">英语学习</span>
+        <span class="tag tag-attr">商业化</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">51Talk 2026 Q1 营收 3120 万美元同比增长 70.9%，新一代 AI 产品年内推出</div>
+      <div class="item-summary">51Talk 发布 Q1 财报：营收 3120 万美元（+70.9%），活跃学员 13.3 万（+63.9%），毛利率 73.7%。全面转向海外市场后增长强劲，公司透露新一代 AI 教育产品将于今年晚些时候推出。</div>
+      <div class="item-reason">💡 推荐理由：中国教育出海标杆，AI 战略转型动向值得持续跟踪</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 芥末堆 / 多知网</span>
+        <a href="https://www.jiemodui.com/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Khan Academy -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-11</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">行业趋势</span>
+        <span class="tag tag-domain">AI学习机</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Caixin Global：AI 驱动中国新教培繁荣——从补习班到智能平板</div>
+      <div class="item-summary">财新国际深度报道：中国家长正从线下补习班大规模转向家庭学习硬件、AI教育服务和课外活动。AI学习机、智能教育硬件成为教育消费新核心，标志着中国教育科技市场的结构性转型。</div>
+      <div class="item-reason">💡 推荐理由：中国教育消费转型的一手数据，AI硬件替代线下培训的趋势实证</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Caixin Global</span>
+        <a href="https://www.caixinglobal.com/2026-06-11/from-cram-schools-to-smart-tablets-ai-fuels-chinas-new-edtech-boom-102453043.html" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] 豆包课堂 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-10</span>
+      <span class="time">11:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Khan Academy</span>
+        <span class="tag tag-subject">Duolingo</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">5W 发布首个 EdTech AI 可见度指数：可汗学院、多邻国、Coursera 分列前三</div>
+      <div class="item-summary">5W PR 发布《EdTech AI Visibility Index 2026》，评估 25 大在线教育品牌在 ChatGPT、Claude、Perplexity、Google AI Overviews 中的 AI 引用占比。Khan Academy、Duolingo、Coursera 位居前三。</div>
+      <div class="item-reason">💡 推荐理由：教育品牌 AI 心智份额竞争首次量化，SEO/增长策略有参考价值</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 5W Research</span>
+        <a href="https://www.5wpr.com/ai-visibility-index/edtech-ai-visibility-index-2026/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 千问1000万 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-10</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Duolingo</span>
+        <span class="tag tag-subject">Coursera</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-domain">语言学习</span>
+      </div>
+      <div class="item-title">5W 发布首个 EdTech AI Visibility Index：Khan Academy 登顶，传统SEO巨头全面溃败</div>
+      <div class="item-desc">5W 分析 ChatGPT、Claude、Perplexity 等AI引擎引用数据，Khan Academy、Duolingo、Coursera 位列前三；Chegg（#19）、Course Hero（#21）等传统SEO赢家在AI推荐中几乎消失。</div>
+      <div class="item-recommend">💡 推荐理由：揭示AI搜索时代教育品牌曝光规则的根本性转变</div>
+      <div class="item-source">📍 来源：5W PR Newswire</div>
+      <div class="item-link"><a href="https://www.prnewswire.com/news-releases/duolingo-and-khan-academy-dominate-edtech-ai-visibility-according-to-5w-ai-intelligence-302776463.html" target="_blank" rel="noopener">https://www.prnewswire.com/news-releases/duolingo-and-khan-academy-dominate-edtech-ai-visibility-according-to-5w-ai-intelligence-302776463.html</a></div>
+    </div>
+  </div>
+
+  <!-- [JUNE] Google DeepMind 教育负责人：一刀切禁用AI将 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-10</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">Google DeepMind 教育负责人：一刀切禁用AI将扼杀教育创新</div>
+      <div class="item-desc">Google DeepMind 学习计划总监 Miriam Schneider 接受 THE 专访：AI 不会改变教学法而是强化它；全有或全无的禁令态度将阻碇关于未来学习模式的深度对话。</div>
+      <div class="item-recommend">💡 推荐理由：顶级AI实验室对高等教育AI政策的官方立场，影响深远</div>
+      <div class="item-source">📍 来源：Inside Higher Ed</div>
+      <div class="item-link"><a href="https://www.insidehighered.com/news/tech-innovation/teaching-learning/2026/06/10/all-or-nothing-approach-ai-risks-shutting-down" target="_blank" rel="noopener">https://www.insidehighered.com/news/tech-innovation/teaching-learning/2026/06/10/all-or-nothing-approach-ai-risks-shutting-down</a></div>
+    </div>
+  </div>
+
+  <!-- [JUNE] 全球教育科技Q2融资突省$10.23亿：AI辅导、评分、教师 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-09</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">OpenAI</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">OpenAI 公布首届 ChatGPT Futures Class of 2026：26 名学生获 1 万美元资助</div>
+      <div class="item-summary">OpenAI 公布首届"ChatGPT Futures 2026 班级"，26 名大学生/应届生/团队各获 1 万美元资助及前沿模型访问权，覆盖教育、无障碍、健康、气候等方向。其中多款产品直接面向教育：盲人音频学习游戏、覆盖 190 国的 AI 大学升学顾问、多语种学习视频等。</div>
+      <div class="item-reason">💡 推荐理由：OpenAI 首个面向 Z 世代的"教育+AI 原生项目"资助计划，预示未来校园 AI 工具来源</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 EdTech Innovation Hub</span>
+        <a href="https://www.edtechinnovationhub.com/news/openai-names-first-chatgpt-futures-class-of-2026-to-back-student-ai-projects" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0629] Coursera-Udemy Merger -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-06</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">全球教育科技Q2融资突省$10.23亿：AI辅导、评分、教师支持赛道领跑</div>
+      <div class="item-desc">2026年5-6月教育科技融资$10.23亿，10笔交易覆盖AI辅导（Third Space $5.94M）、评分（Pensive $6.8M）、语言学习（Lucida $5.4M）、游戏化学习（Gizmo $22M）等方向。</div>
+      <div class="item-recommend">💡 推荐理由：Q2融资数据反映AI教育投资热点从平台转向AI原生工具</div>
+      <div class="item-source">📍 来源：Fundz Market Intelligence</div>
+      <div class="item-link"><a href="https://www.fundz.net/market-intelligence/education-06-2026" target="_blank" rel="noopener">https://www.fundz.net/market-intelligence/education-06-2026</a></div>
+    </div>
+  </div>
+
+  <!-- [JUNE] CoSN 2026 EdTech报告：79%学区已制定AI指 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-03</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">字节跳动</span>
+        <span class="tag tag-domain">AI视频课</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">字节跳动"豆包课堂"上线：Seedance 视频生成能力落地 AI 教育，AI 视频课时代开启</div>
+      <div class="item-summary">字节旗下豆包爱学App推出"豆包课堂"，基于Seedance视频生成模型打造沉浸式AI视频课。以"AI情景短片+知识点精讲"模式替代传统录播课，支持PGC+UGC双模式，实现千人千面的个性化AI授课。</div>
+      <div class="item-reason">💡 推荐理由：多模态大模型落地教育的最前沿实践，AI从讲题升级为讲课</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 今日头条 / 腾讯新闻</span>
+        <a href="https://news.qq.com/rain/a/20260527A03AH800" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] Duolingo 2026 Strategy -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-02</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Wharton 研究：个性化 AI 导师显著提升学习效果，不增加教师负担</div>
+      <div class="item-summary">宾大沃顿商学院发布新研究：基于学生个人数据定制的 AI 导师可在不增加教学时长、不增加教师工作量的前提下，显著提升学生学习成效。该研究为"大规模因材施教"提供了关键的实证依据。</div>
+      <div class="item-reason">💡 推荐理由：顶级商学院实证研究为 AI 个性化辅导的产业化扫除关键怀疑</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Wharton Knowledge</span>
+        <a href="https://knowledge.wharton.upenn.edu/article/how-personalized-ai-tutors-can-help-students-learn/" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- [NEW] Caixin AI EdTech Boom -->
+    <!-- [JUNE] Google ISTELive 2026：教师主导AI时代来 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-02</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-attr">安全/对齐</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">CoSN 2026 EdTech报告：79%学区已制定AI指南，网络安全成最大隐忧</div>
+      <div class="item-desc">CoSN 对600名K-12首席技术官的年度调查：79%学区已制定AI使用指南（vs 2025年57%）；98%担忧AI引入新型网络攻击；仅29%审查教育科技产品的无障碇性。</div>
+      <div class="item-recommend">💡 推荐理由：美国K-12 AI推广大规模进展与潜在风险并存的重要信号</div>
+      <div class="item-source">📍 来源：EdSurge</div>
+      <div class="item-link"><a href="https://www.edsurge.com/news/2026-06-02-report-school-it-officials-worried-about-ai-adoption-cybersecurity" target="_blank" rel="noopener">https://www.edsurge.com/news/2026-06-02-report-school-it-officials-worried-about-ai-adoption-cybersecurity</a></div>
+    </div>
+  </div>
+
+<div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">05-05</span>
+      <span class="time">08:30</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Khan Academy</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Khan Academy 仅 15% 学生使用 Khanmigo AI 导师，夏季全面改版重新设计</div>
+      <div class="item-summary">可汗学院内部数据显示仅 15% 的合格学生主动使用 AI 辅导工具 Khanmigo。新设计将从"被动响应"转向"主动引导"，2026 年夏季向所有合作学区推出，是 AI 教育产品大规模落地的重要反思节点。</div>
+      <div class="item-reason">💡 推荐理由：AI 教育产品大规模落地最真实的用户数据，反思价值极高</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 The Learning Standard</span>
+        <a href="https://thelearningstandard.org/news/khan-academy-revamps-ai-tutor-after-low-student-usage" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 5W -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">05-01</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI自习室</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-scene">家庭教育</span>
+      </div>
+      <div class="item-title">AI 自习室从概念走向机构常态化刚需，2026 年教育行业新基础设施</div>
+      <div class="item-summary">AI 自习室在 2026 年从早期概念炒作进入务实落地阶段。在政策引导、技术成熟、家长需求升级三重驱动下，正成为教育机构提升竞争力、降低运营风险的核心基础设施。</div>
+      <div class="item-reason">💡 推荐理由：线下 AI 教育场景新范式，教培机构转型的关键基础设施</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 搜狐教育</span>
+        <a href="https://www.sohu.com/a/1004450715_122484892" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Google BETT -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">04-16</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Duolingo</span>
+        <span class="tag tag-domain">AI战略</span>
+        <span class="tag tag-attr">战略发布</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">Duolingo 2026 战略：目标 1 亿 DAU，AI 功能全面免费化，牺牲短期收入换长期增长</div>
+      <div class="item-summary">Duolingo CEO Luis von Ahn 发布三年战略：从5000万DAU迈向1亿。核心措施包括AI功能向免费用户开放（Explain My Answer回归免费、Speaking Adventures全员可用）、深化语言课程至B2级别、推动国际象棋/数学/音乐等非语言课程。放弃$5000万短期收入，2026年定位为投资年。</div>
+      <div class="item-reason">💡 推荐理由：全球最大教育App的战略级AI转型，免费策略可能重塑行业竞争格局</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Class Central 深度分析</span>
+        <a href="https://www.classcentral.com/report/duolingo-2026-strategy/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] Lucida AI -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">04-16</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Lucida AI</span>
+        <span class="tag tag-domain">语音AI</span>
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">Lucida AI 获 540 万美元种子轮，语音优先 AI 语言教练实时分析发音与流利度</div>
+      <div class="item-summary">Lucida AI 完成种子轮融资，打造语音优先的AI语言学习教练。通过实时分析学习者的发音、流利度和语法，提供即时反馈，切入AI语言学习赛道。</div>
+      <div class="item-reason">💡 推荐理由：语音AI+语言学习的垂直融合案例，实时发音分析技术值得关注</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 New Market Pitch</span>
+        <a href="https://newmarketpitch.com/blogs/news/ai-education-funding-news" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] 巨头大战AI教育 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">04-15</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Gizmo</span>
+        <span class="tag tag-domain">游戏化学习</span>
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Gizmo 获 2200 万美元 A 轮融资，AI 游戏化学习平台用户突破 1300 万</div>
+      <div class="item-summary">伦敦 AI 学习平台 Gizmo 完成由 Shine Capital 领投的 2200 万美元 A 轮融资。平台将学习笔记转化为游戏化闪卡测验，致力于"让学习上瘾"，已覆盖全球 1300 万学习者，计划加速全球扩张。</div>
+      <div class="item-reason">💡 推荐理由：AI 游戏化学习赛道最大规模融资，产品形态具有强网络效应</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 StartupResearcher / PRNewswire</span>
+        <a href="https://www.prnewswire.com/news-releases/gizmo-raises-22-million-series-a-to-make-learning-addictive-for-13-million-learners-worldwide-302741943.html" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 51Talk Q1 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">02-23</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-domain">AI 素养</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Google 与 ISTE+ASCD 达成三年合作，为 600 万美国教师提供 AI 素养培训</div>
+      <div class="item-summary">ISTE+ASCD 宣布与 Google 建立三年合作伙伴关系，目标为 600 万 K-12 美国教育工作者提供高质量 AI 素养培训，覆盖从基础认知到课堂实践的全链路，是美国最大规模的教师 AI 赋能项目。</div>
+      <div class="item-reason">💡 推荐理由：全球最大规模教师 AI 培训项目，影响 600 万教育者</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 ISTE Official</span>
+        <a href="https://iste.org/news/iste-ascd-and-google-partner-to-provide-ai-literacy-training-to-six-million-u-s-educators" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. AI自习室 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">02-10</span>
+      <span class="time">08:30</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">行业趋势</span>
+        <span class="tag tag-domain">AI大模型</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">2026 巨头大战 AI 教育：字节/阿里/百度三股势力全景扫描</div>
+      <div class="item-summary">36氪/澎湃新闻深度分析：AI教育赛道汇聚三大势力——以字节、阿里为代表的技术派（大模型底座+流量入口），以学而思、作业帮为代表的教研派（自研教育垂直模型），以及新兴AI原生创业公司。2026年将成为AI教育产品规模化落地的关键年份。</div>
+      <div class="item-reason">💡 推荐理由：中国AI教育竞争格局最清晰的一次全景分析，赛道定义价值高</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 36氪 / 澎湃新闻</span>
+        <a href="https://m.thepaper.cn/newsDetail_forward_32572558" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] Vimi $12M -->
+  <div class="timeline-row last-in-category">
+    <div class="timeline-gutter">
+      <span class="date">01-28</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Google for Education BETT 2026 战略报告：从 AI 助手迈向 AI 智能体</div>
+      <div class="item-summary">Google BETT 2026 发布战略报告，宣布 2026 年为"Actionable AI"之年。核心转型方向：从让教师"尝试 Prompt"转向"可执行的 AI 智能体"，将 AI 无缝嵌入 LMS 和课堂工作流。</div>
+      <div class="item-reason">💡 推荐理由：全球最大教育科技公司年度战略，定义了行业演进方向</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Google for Education</span>
+        <a href="https://www.googleforeducommunity.com/t5/News-Announcements/BETT-2026-Strategic-Report-From-AI-Assistants-to-AI-Agents/ba-p/200840" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+  </div><!-- /tab-a -->
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!--  TAB B · AI 教育产品                                 -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">01-27</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Vimi</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Vimi 获 1200 万美元种子轮，打造 AI K-12 个性化辅导平台</div>
+      <div class="item-summary">Axios报道Vimi完成1200万美元种子轮融资，专注为K-12学生提供AI个性化辅导，是2026年AI教育赛道早期融资规模最大的交易之一。</div>
+      <div class="item-reason">💡 推荐理由：2026年AI K-12辅导赛道最大种子轮，个性化教学需求强劲</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Axios Pro / New Market Pitch</span>
+        <a href="https://www.axios.com/pro/all-deals/2026/01/27/vimi-12-million-ai-k-12-tutoring" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] Sparkli $5M -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">01-22</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-a"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Sparkli</span>
+        <span class="tag tag-domain">游戏化学习</span>
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Google 校友创办 Sparkli 获 500 万美元，打造 5-12 岁儿童多模态 AI 学习平台</div>
+      <div class="item-summary">Sparkli由前Google员工创立，完成500万美元前种子轮融资。平台为5-12岁儿童创建多模态AI学习探险，融合游戏、音频、视频、测验和模拟，切入儿童AI学习蓝海市场。</div>
+      <div class="item-reason">💡 推荐理由：儿童AI学习产品化尝试，前Google团队的多模态教育探索</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Tech.eu / New Market Pitch</span>
+        <a href="https://tech.eu/2026/01/22/google-alums-raise-5m-for-sparkli-an-ai-based-learning-platform-for-children/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Gizmo -->
+  
+<div class="category-section" id="tab-b">
+  <div class="category-header cat-b">
+    <span class="cat-name">B · AI 教育产品</span>
+    <span class="cat-count">29 条</span>
+  </div>
+
+  <!-- [BATCH-0720] Anthropic Claude for Teachers -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-14</span>
+      <span class="time">15:11</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Anthropic</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Anthropic推出Claude for Teachers：全美K-12教师免费使用，接入50州课标与9家EdTech平台</div>
+      <div class="item-desc">Anthropic发布Claude for Teachers，向美国认证K-12教师免费提供Claude Pro全部功能，接入Learning Commons覆盖50州15万条学术标准，集成ASSISTments、Brisk Teaching、Canva Education等9个MCP连接器，含Claude Code和Cowork自主任务能力。</div>
+      <div class="item-recommend">💡 推荐理由：大模型巨头正式进K-12，课标对齐+MCP生态构建教师AI工作流闭环</div>
+      <div class="item-source">📍 来源：Anthropic Newsroom · 2026-07-14</div>
+      <div class="item-link"><a href="https://www.anthropic.com/news/claude-for-teachers" target="_blank" rel="noopener">https://www.anthropic.com/news/claude-for-teachers</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0720] 上海师大智身课堂 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-20</span>
+      <span class="time">17:48</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">多模态</span>
+        <span class="tag tag-domain">计算机视觉</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">上海师大"智身课堂"(EPBEA)：AI首次实现艺术教育智能化评价，无穿戴设备精准评分</div>
+      <div class="item-desc">上海师大发布具身知觉行为智能测评大模型"智身课堂"，融合计算机视觉与多模态认知计算，仅凭普通手机视频即可精准采集师生肢体动作并量化评分，填补国内艺术教育智能化评价空白，在WAIC 2026上展示。</div>
+      <div class="item-recommend">💡 推荐理由：AI教育评价从文化课拓展至艺术课，无穿戴设备降低部署门槛</div>
+      <div class="item-source">📍 来源：上观新闻 · 2026-07-20</div>
+      <div class="item-link"><a href="https://www.163.com/dy/article/L2A36L0L055040N3_pdya11y.html" target="_blank" rel="noopener">https://www.163.com/dy/article/L2A36L0L055040N3_pdya11y.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0720] 智绘科普 乡村教育AI教学动画 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-17</span>
+      <span class="time">09:41</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">阿里</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">首届"小有可为"大赛乡村教育一等奖"智绘科普"：AI多Agent协作生成教学动画</div>
+      <div class="item-desc">获奖作品"智绘科普"采用Qwen3.5大模型与Manim动画引擎，通过规划、草稿、实现、审查、合成五阶段多Agent协作，将知识主题转化为可控可编辑的教学动画，渲染失败可自动修复，工程范式可迁移至其他教育赛道。</div>
+      <div class="item-recommend">💡 推荐理由：多Agent协作生成教学动画，乡村教育AI应用的工程化范本</div>
+      <div class="item-source">📍 来源：通义实验室（千问） · 2026-07-17</div>
+      <div class="item-link"><a href="https://mp.weixin.qq.com/s/a2YKWmyMoyIc3GKLbXffpQ" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/a2YKWmyMoyIc3GKLbXffpQ</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] Quizlet 推出 Google Classroom 插件 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-03</span>
+      <span class="time">15:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Quizlet</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Quizlet推出Google Classroom插件：学习活动与进度追踪直接嵌入教师工作流</div>
+      <div class="item-desc">Quizlet发布Google Classroom插件，允许教师在Classroom界面内发现、创建、分配和监控Quizlet学习活动（练习题、闪卡、互动游戏），减少多工具切换。需Google Workspace for Education Plus订阅。</div>
+      <div class="item-recommend">💡 推荐理由：教育AI产品竞争转向"嵌入教师工作流"而非独立工具</div>
+      <div class="item-source">📍 来源：EdTech Innovation Hub · 2026-07-03</div>
+      <div class="item-link"><a href="https://edtechinnovationhub.com/news/quizlet-moves-assignments-and-progress-tracking-inside-google-classroom" target="_blank" rel="noopener">https://edtechinnovationhub.com/news/quizlet-moves-assignments-and-progress-tracking-inside-google-classroom</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] 学而思T6旗舰学习机全平台开售 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-09</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">学而思</span>
+        <span class="tag tag-subject">好未来</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-domain">个性化学习</span>
+      </div>
+      <div class="item-title">学而思T6旗舰学习机全平台开售：三版本售价6899-11999元，培优AI家教打通诊断规划与互动课堂</div>
+      <div class="item-desc">好未来学而思T6系列学习机7月9日全平台开售，含标准版/国际版/Max（首发价6899/8699/11999元），搭载与TCL华星联合定制的APEX自然光护眼屏（学习机行业首个SGS高自然光相似度认证）。同步推出培优AI家教，融合AI诊断规划与AI双师互动课堂。</div>
+      <div class="item-recommend">💡 推荐理由：学而思牵头制定行业首个AI家教标准，硬件+服务+标准三线并进</div>
+      <div class="item-source">📍 来源：山西晚报 / 南方+ · 2026-07-09</div>
+      <div class="item-link"><a href="https://www.163.com/dy/article/L0OG9ND50512808N.html" target="_blank" rel="noopener">https://www.163.com/dy/article/L0OG9ND50512808N.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] Anthropic Claude for Education 学习模式 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-05</span>
+      <span class="time">11:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Anthropic</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">高等教育</span>
+        <span class="tag tag-domain">AI教师</span>
+      </div>
+      <div class="item-title">Anthropic Claude for Education"学习模式"：苏格拉底式提问引导学生独立思考</div>
+      <div class="item-desc">Anthropic Claude for Education核心亮点是"学习模式"，在Projects功能内运行，通过引导而非解答、苏格拉底式提问、突出核心理念、提供研究/学习指南模板，培养学生独立思考能力，区别于传统"答案机器"。</div>
+      <div class="item-recommend">💡 推荐理由：教育AI定位从"答案"转向"思考伙伴"，设计哲学具借鉴价值</div>
+      <div class="item-source">📍 来源：Anthropic官网 / 芥末堆 · 2026-07-05</div>
+      <div class="item-link"><a href="https://www.anthropic.com/education" target="_blank" rel="noopener">https://www.anthropic.com/education</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] LingoAce Tutor Luna AI-native英语学习产品 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-11</span>
+      <span class="time">16:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">LingoAce</span>
+        <span class="tag tag-domain">语言学习</span>
+        <span class="tag tag-domain">英语学习</span>
+        <span class="tag tag-attr">产品发布</span>
+      </div>
+      <div class="item-title">LingoAce发布Tutor Luna：面向4-12岁的AI-native英语学习产品，从"功能叠加"到"原生重构"教学交付逻辑</div>
+      <div class="item-desc">LingoAce推出AI-native英语学习产品Tutor Luna，核心命题是AI全程读懂学习者能力变化、深度参与教学全流程决策，而非仅提供问答陪练。标志AI教育产品从"AI-powered"向"AI-native"架构跃迁。</div>
+      <div class="item-recommend">💡 推荐理由：首个明确AI-native架构的儿童英语产品，定义下一代AI教育形态</div>
+      <div class="item-source">📍 来源：芥末堆 · 2026-07-11</div>
+      <div class="item-link"><a href="https://c.m.163.com/news/a/L1ION764051480G7.html" target="_blank" rel="noopener">https://c.m.163.com/news/a/L1ION764051480G7.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] 豌豆思维与华领AI签约 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-09</span>
+      <span class="time">17:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">豌豆思维</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">豌豆思维与华领人工智能正式签约，共同推进AI教育赋能学校场景</div>
+      <div class="item-desc">豌豆思维课程接入华领云端清山书院，共同推进AI教育赋能学校场景。标志着儿童思维训练品牌从线上1对1向AI赋能公立学校场景延伸。</div>
+      <div class="item-recommend">💡 推荐理由：儿童思维训练品牌与AI企业联合进校，AI教育从线上走向线下融合</div>
+      <div class="item-source">📍 来源：芥末堆 · 2026-07-09</div>
+      <div class="item-link"><a href="https://www.jiemodui.com/" target="_blank" rel="noopener">https://www.jiemodui.com/</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0709] 百度文心一言深度阅读+图表生成 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-01</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">百度</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-domain">大模型</span>
+      </div>
+      <div class="item-title">百度文心一言App上线"深度阅读"与"图表生成"，AI学习辅助能力再升级</div>
+      <div class="item-desc">文心一言App新增两大学习场景功能：深度阅读支持百页PDF核心论点提取与结构化脑图生成，图表生成支持自然语言指令直接产出可视化表格。被视为百度用大模型巩固C端办公学习助手入口的关键举措。</div>
+      <div class="item-recommend">💡 推荐理由：头部大模型C端产品向学习场景纵深，AI辅助阅读与知识整理成新标配</div>
+      <div class="item-source">📍 来源：新浪财经 · AI应用周度观察</div>
+      <div class="item-link"><a href="https://finance.sina.com.cn/stock/t/2026-07-05/doc-inifuhwt9248889.shtml" target="_blank" rel="noopener">https://finance.sina.com.cn/stock/t/2026-07-05/doc-inifuhwt9248889.shtml</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0702] Microsoft AI in Education Report 2026 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-24</span>
+      <span class="time">11:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">微软</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Microsoft发布第三版《AI in Education》年度报告：92%教育工作者已在工作中使用AI</div>
+      <div class="item-desc">微软于ISTE 2026前夕发布第三版年度AI教育报告，覆盖全球数十万教育工作者。核心发现：92%已在工作中使用AI，但仅47%接受过正式AI培训。同期宣布面向A3/A5用户免费推出多款AI教育工具及培训认证项目。</div>
+      <div class="item-recommend">💡 推荐理由：92%的AI采纳率数据将成为全球教育AI政策制定的关键基准参考</div>
+      <div class="item-source">📍 来源：Microsoft News</div>
+      <div class="item-link"><a href="https://news.microsoft.com/source/2026/06/24/microsofts-new-ai-in-education-report-highlights-widespread-adoption-and-increasing-demand-for-support" target="_blank" rel="noopener">https://news.microsoft.com/...ai-in-education-report...</a></div>
+    </div>
+  </div>
+<!-- [BATCH-0629] Microsoft ISTE 23 features -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-25</span>
+      <span class="time">18:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Google Gemini 推出免费学习笔记本（Study Notebooks），自适应个性化学习空间全球上线</div>
+      <div class="item-summary">Google 在 Gemini App 中推出 Study Notebooks 功能，基于用户课程材料将 Gemini 转变为互动自适应学习空间，根据测验表现提供个性化课程，免费面向全球用户，支持所有语言。</div>
+      <div class="item-reason">💡 推荐理由：Google 教育 AI 年度最重要发布，免费模式可能重塑市场格局</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Google (@GeminiApp)</span>
+        <a href="https://x.com/GeminiApp/status/2070175974151573533" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Google ISTE Student -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-25</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-domain">自适应学习</span>
+        <span class="tag tag-domain">AI题库</span>
+      </div>
+      <div class="item-title">Google ISTE 2026：Classroom 全面接入 Gemini，Study Notebooks + Princeton Review 免费模考</div>
+      <div class="item-summary">Google 在 ISTE 2026 上线 Classroom in Gemini（教师带真实课堂语境调用 AI）、Study Notebooks 自适应学习笔记、与 The Princeton Review 合作提供免费 ACT/GRE 模拟测试，并向 aiEDU 资助 Title 1 学区 AI 准备项目。教师主导 AI 活动与 Guided Learning Chromebook 模式同期推出。</div>
+      <div class="item-reason">💡 推荐理由：Google 把"教师主导"理念落到产品层，与 Microsoft 正面竞争 K-12 AI 入口</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Google for Education Blog</span>
+        <a href="https://blog.google/products-and-platforms/products/education/collection-iste-june-2026/" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0629] Netease Youdao Tubook Fair Agent matrix -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-25</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Google Classroom 上线教师主导AI活动：Guided Learning、NotebookLM、Focus Mode</div>
+      <div class="item-desc">Google 推出教师主导AI活动系统：教师可创建交互式学习指南、自适应测验、个性化作业辅导；Focus Mode 可锁定学生屏幕到指定AI工具；Classroom MCP Server 开放第三方EdTech集成。</div>
+      <div class="item-recommend">💡 推荐理由：教师主导+AI辅助模式定义了教育AI产品设计的黄金标准</div>
+      <div class="item-source">📍 来源：Google for Education Blog</div>
+      <div class="item-link"><a href="https://blog.google/products-and-platforms/products/education/iste-2026-educator-updates/" target="_blank" rel="noopener">https://blog.google/products-and-platforms/products/education/iste-2026-educator-updates/</a></div>
+    </div>
+  </div>
+
+  <!-- [JUNE] Microsoft 教育AI全家桶：Unit Plans、C -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-24</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">微软</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Microsoft ISTE 2026 一口气发布 23 项教育 AI 新功能：Copilot Notebooks 全员免费</div>
+      <div class="item-summary">微软 ISTE 2026 公布 23 项更新：Copilot Notebooks 与 Study Guide 面向所有 A1/A3/A5 教育许可证用户免费开放、Study and Learn Agent 新增多语言、Learning Zone 2027 年 8 月前 Windows 11 全平台免费试用、新增《经济学人》AI 素养课程合作、LMS 内 Copilot Teaching Tools 公开预览。</div>
+      <div class="item-reason">💡 推荐理由：微软把教育 AI 全家桶门槛压到零免费，K-12 AI 工具进入"白热化"阶段</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Microsoft Education Blog</span>
+        <a href="https://techcommunity.microsoft.com/blog/EducationBlog/what%E2%80%99s-new-in-microsoft-edu---23-new-features-for-iste-2026/4516294" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0629] Google ISTE 2026 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-24</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">微软</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">Microsoft 教育AI全家桶：Unit Plans、Copilot Notebooks、Study Agent 齐发</div>
+      <div class="item-desc">微软发布 Unit Plans（AI备课）、Copilot Notebooks（交互式学习笔记）、Study and Learn Agent（苏格拉底式AI辅导）及 Learning Zone（教师实时监控课堂），全部免费提供给教育用户。</div>
+      <div class="item-recommend">💡 推荐理由：Microsoft 365 教育版成为最全面的免费AI教学工具套件</div>
+      <div class="item-source">📍 来源：Microsoft Education Blog</div>
+      <div class="item-link"><a href="https://news.microsoft.com/source/2026/06/24/microsofts-new-ai-in-education-report-highlights-widespread-adoption-and-increasing-demand-for-support" target="_blank" rel="noopener">https://news.microsoft.com/source/2026/06/24/microsofts-new-ai-in-education-report-highlights-widespread-adoption-and-increasing-demand-for-support</a></div>
+    </div>
+  </div>
+
+  <!-- [JUNE] UNESCO AI与数字公民免费课程全球上线，教师认证体系启 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-24</span>
+      <span class="time">12:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">阿里</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">考试备考</span>
+      </div>
+      <div class="item-title">千问发布高考志愿填报 Agent，AI 测评能力超过资深咨询师</div>
+      <div class="item-summary">友松实验室发布首个高考志愿 AI 测评报告：千问在 44 道事实题中全部答对，模拟 10 个志愿中 6 个可录取，综合表现稳定精确，超过 53 位平均从业 4.6 年的人类志愿咨询师。</div>
+      <div class="item-reason">💡 推荐理由：AI 首次在专业咨询场景超越人类专家，教育决策范式变革</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 千问APP（阿里）/ 芥末堆</span>
+        <a href="https://mp.weixin.qq.com/s/oGHVP4MgGS1rbmT8s8St8Q" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Gemini for Education -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-23</span>
+      <span class="time">15:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">网易有道</span>
+        <span class="tag tag-domain">语音AI</span>
+        <span class="tag tag-domain">TTS</span>
+        <span class="tag tag-attr">开源</span>
+      </div>
+      <div class="item-title">网易有道发布 Confucius4-TTS：14 语种跨语种无口音语音克隆开源模型</div>
+      <div class="item-summary">网易有道推出"子曰 4.0"TTS 引擎 Confucius4-TTS，支持 14 种语言跨语种无口音语音克隆，仅需 3 秒音频即可实现零样本音色克隆，是业内首个支持此能力的开源模型。</div>
+      <div class="item-reason">💡 推荐理由：语音AI在语言学习场景的重大突破，开源策略利好教育产品</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 IT之家</span>
+        <a href="https://www.ithome.com/0/967/636.htm" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 千问 Agent -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-19</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">网易有道</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">网易有道全场景 Agent 矩阵亮相图博会，AI 订阅单季破亿后全面转型</div>
+      <div class="item-summary">网易有道在 6 月 19 日图博会上首次展出"全场景 Agent 矩阵"，覆盖词典笔、学习机、口语教练、子曰大模型等核心产品。2026 Q1 财报显示其 AI 订阅销售额已突破 1 亿元（同比 +70%），公司明确"在线教育"标签让位于"AI+广告"新叙事。</div>
+      <div class="item-reason">💡 推荐理由：传统在线教育公司 AI 转型的标杆样本，AI 订阅破亿验证商业模式</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 网易/TechWeb</span>
+        <a href="https://m.163.com/dy/article/KVQ7MI4V05119MAU.html" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- [NEW] 全球AI教育服务平台 -->
+    <!-- [JUNE] Google Classroom 上线教师主导AI活动：Gu -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-15</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">UNESCO AI与数字公民免费课程全球上线，教师认证体系启动</div>
+      <div class="item-desc">UNESCO 扩展AI与数字公民在线课程，6月15日全球开课，覆盖AI伦理、数据隐私、算法公平等模块，面向全球教育工作者提供认证。</div>
+      <div class="item-recommend">💡 推荐理由：全球最权威教育机构的AI素养培训体系</div>
+      <div class="item-source">📍 来源：UNESCO Education</div>
+      <div class="item-link"><a href="https://blogs.educationmitra.in/unesco-ai-digital-citizenship-course-2026" target="_blank" rel="noopener">https://blogs.educationmitra.in/unesco-ai-digital-citizenship-course-2026</a></div>
+    </div>
+  </div>
+
+<div class="timeline-row last-in-category">
+    <div class="timeline-gutter">
+      <span class="date">06-01</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">百度</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">考试备考</span>
+      </div>
+      <div class="item-title">百度上线高考 AI 志愿报告真人专家背书机制，增强产品可信度</div>
+      <div class="item-summary">百度在高考志愿填报 AI 产品中新增真人专家背书机制，将 AI 分析与人类咨询师双重验证结合，回应社会对 AI 教育决策工具可靠性的关切。</div>
+      <div class="item-reason">💡 推荐理由：AI 教育产品"可信度建设"的实践参考，专家+AI 协作模式</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 芥末堆</span>
+        <a href="https://www.jiemodui.com/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+  </div><!-- /tab-b -->
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!--  TAB C · 重磅学术研究                                 -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">05-13</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">教育部</span>
+        <span class="tag tag-domain">教育垂直模型</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">全球教育</span>
+      </div>
+      <div class="item-title">中国发布全球 AI 教育服务平台：全球首个 AI 教育跨境供需对接平台上线</div>
+      <div class="item-summary">2026世界数字教育大会期间，中国宣布全球AI教育服务平台上线。该平台汇聚全球AI教育产品，运用AI技术实现供给侧资源与需求侧场景的精准匹配，是首个面向AI教育领域的跨境供需对接基础设施。</div>
+      <div class="item-reason">💡 推荐理由：国家级AI教育基础设施，为教育科技企业提供全球化分发渠道</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 教育部 / China.org.cn</span>
+        <a href="https://www.china.org.cn/2026-05/13/content_118491270.shtml" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] Coursera AI学位 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">04-15</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-domain">AI助教</span>
+        <span class="tag tag-domain">LMS</span>
+        <span class="tag tag-attr">产品发布</span>
+      </div>
+      <div class="item-title">Google Gemini for Education 全面上线，支持 Canvas / D2L / Moodle 深度集成</div>
+      <div class="item-summary">Google 正式推出 Gemini for Education，支持 Canvas、D2L 等 LMS 集成，5 月起扩展至 Moodle。教师可在 LMS 中直接布置 AI 学习任务，学生获得个性化 AI 学习支持。</div>
+      <div class="item-reason">💡 推荐理由：教育 AI 与 LMS 融合的标杆案例，影响全球数百万教师和学生</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Google Blog</span>
+        <a href="https://blog.google/products-and-platforms/products/education/ai-tools-programs-educators/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 百度 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">03-13</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Coursera</span>
+        <span class="tag tag-domain">AI课程</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">Coursera 推出 AI 驱动学位项目，重新定义 2026 在线教育</div>
+      <div class="item-summary">Coursera于2026年3月宣布推出AI驱动学位项目，将AI个性化学习深度嵌入正式学位课程。覆盖210+大学合作伙伴和770+Coursera for Campus客户，标志着MOOC平台从"课程超市"向"AI学位工厂"转型。</div>
+      <div class="item-reason">💡 推荐理由：MOOC巨头AI转型标杆案例，AI+正式学位的模式创新</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Coursera Official / Consumer365</span>
+        <a href="https://newspews.com/article/coursera-launches-ai-powered-degree-programs-redefining-online-education-in-2026" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] Coursera AI报告 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">02-25</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Coursera</span>
+        <span class="tag tag-domain">AI 素养</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">Coursera 2026 AI 高等教育报告：95% 师生使用 AI，但仅 25% 教师感觉准备充分</div>
+      <div class="item-summary">Coursera发布首份《AI in Higher Education Report》，调研5国4200+师生：95%已在教育场景使用AI工具，81%认为AI对高等教育影响积极——但仅25%教师认为具备有效使用AI的技能，仅26%高校有正式AI使用政策。</div>
+      <div class="item-reason">💡 推荐理由：AI教育领域最全面的全球调研数据，揭示"使用高但准备低"的核心矛盾</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Coursera Blog</span>
+        <a href="https://blog.coursera.org/ai-in-higher-education-report-2026/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] Duolingo Speaking Adventures -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">02-01</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Duolingo</span>
+        <span class="tag tag-domain">语音AI</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">Duolingo 推出 Speaking Adventures + Focus Mode：场景化 AI 口语练习全员免费</div>
+      <div class="item-summary">Duolingo发布Speaking Adventures（场景化AI口语任务如"去买个三明治给那个人"）和Focus Mode（学习专注模式），将此前仅Max用户享有的AI功能向全部免费用户开放，同时承诺提升广告质量（引入迪士尼等品牌）。</div>
+      <div class="item-reason">💡 推荐理由：场景化口语练习的产品创新，免费AI功能策略影响行业定价</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Class Central / Duolingo Blog</span>
+        <a href="https://www.classcentral.com/report/duolingo-2026-strategy/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Gemini Study Notebooks -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">16:00</span>
+      <span class="dot dot-b"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Google</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">考试备考</span>
+      </div>
+      <div class="item-title">Google ISTE 2026 学生产品发布：学习笔记本 + 免费 ACT/GRE 模拟测试</div>
+      <div class="item-summary">Google 在 ISTE 2026 大会上宣布面向学生的新产品组合：学习笔记本使 Gemini 成为自适应学习平台，联合 Princeton Review 推出免费 ACT 和 GRE 模拟测试，进一步扩展教育 AI 产品矩阵。</div>
+      <div class="item-reason">💡 推荐理由：Google 教育产品矩阵扩大至考试培训，对教育科技公司构成压力</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Google Blog (Education)</span>
+        <a href="https://blog.google/products-and-platforms/products/education/iste-students-2026/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 有道 -->
+  
+<div class="category-section" id="tab-c">
+  <div class="category-header cat-c">
+    <span class="cat-name">C · 重磅学术研究</span>
+    <span class="cat-count">18 条</span>
+  </div>
+
+  <!-- [BATCH-0720] LLM Tutoring Responses Study -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-10</span>
+      <span class="time">19:12</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-scene">高等教育</span>
+        <span class="tag tag-domain">编程教育</span>
+      </div>
+      <div class="item-title">16,851条编程辅导对话揭示：验证式反馈最有效，直接给答案效果最差</div>
+      <div class="item-desc">UMass研究分析StudyChat数据集16,851条AI辅导交互，发现验证式反馈的学生持续学习率最高(82.4%)，直接给答案最低(62.7%)。在高认知负荷场景下，逐步引导优于直接解答，支持上下文感知的AI辅导设计。</div>
+      <div class="item-recommend">💡 推荐理由：大规模实证数据验证AI辅导策略效果，直接答案≠有效教学</div>
+      <div class="item-source">📍 来源：arXiv · Abrar et al. · 2026-07-10</div>
+      <div class="item-link"><a href="https://arxiv.org/abs/2607.09919" target="_blank" rel="noopener">https://arxiv.org/abs/2607.09919</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0720] Micro-level AI Feedback Features -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-09</span>
+      <span class="time">21:24</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-domain">NLP</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">AI辅导微观反馈研究：具体化详述最有效，长回复反而降低理解</div>
+      <div class="item-desc">研究分析1,718条连续AI辅导交互，发现具体化详述（类比、对比解释、示例）显著提高学生下一轮理解率并降低重复困惑；情感语言无显著效果；更长回复独立关联更低理解率，提示AI辅导应重质量非长度。</div>
+      <div class="item-recommend">💡 推荐理由：微观视角揭示AI辅导反馈特征与学生理解的关系，指导产品设计</div>
+      <div class="item-source">📍 来源：arXiv · Sharmin et al. · 2026-07-09</div>
+      <div class="item-link"><a href="https://arxiv.org/abs/2607.08952" target="_blank" rel="noopener">https://arxiv.org/abs/2607.08952</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] LectūraAgents 多智能体自适应教学框架 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-23</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">arXiv论文：LectūraAgents多智能体自适应教学框架，模拟教授-学生关系具身教学</div>
+      <div class="item-desc">Sesay等提出LectūraAgents分层多智能体框架，ProfessorAgent领导研究/规划/评审/具身授课子代理；引入TASA算法对齐教学动作与讲解时序，生成适应学习者画像的"手写/高亮/下划线"具身教学动作，在高中到研究生多层次课程上验证内容与教学质量提升。</div>
+      <div class="item-recommend">💡 推荐理由：从内容生成到具身教学，多智能体教育框架工程化新范式</div>
+      <div class="item-source">📍 来源：arXiv:2606.16428 · 2026-06-23</div>
+      <div class="item-link"><a href="https://arxiv.org/abs/2606.16428v2" target="_blank" rel="noopener">https://arxiv.org/abs/2606.16428v2</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] Agentic AI for Education 统一多智能体框架 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">04-17</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-domain">个性化学习</span>
+      </div>
+      <div class="item-title">arXiv论文：Agentic AI for Education统一多智能体框架AUSS，整合学生/教师/机构三层</div>
+      <div class="item-desc">Arya Mary等提出AUSS（Agentic Unified Student Support System），融合LLM、强化学习、预测分析与规则推理，实现学生个性化、教师自动化、机构智能三层集成。实验显示推荐准确率92.4%、评分效率94.1%、辍学预测F1 89.5%。</div>
+      <div class="item-recommend">💡 推荐理由：教育多智能体系统从碎片化走向统一框架</div>
+      <div class="item-source">📍 来源：arXiv:2604.16566 · 2026-04-17</div>
+      <div class="item-link"><a href="https://www.arxiv.org/abs/2604.16566" target="_blank" rel="noopener">https://www.arxiv.org/abs/2604.16566</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0706] 北大26000名学生研究 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-04</span>
+      <span class="time">09:08</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">自适应学习</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-attr">安全/对齐</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">北大研究追踪26000名学生：AI使用后作业提升18%但闭卷考试下降20%，升学考影响需约两年才显现</div>
+      <div class="item-desc">北大教育学院追踪26000名7-12年级学生30个月面板数据发现：AI用户作业分数提升18%、完成时间从64分钟降至45分钟，但闭卷考试下降20%，中考高考影响需约两年才充分显现。81%长期用户出现"外包"行为，社科降幅最大(27%)。</div>
+      <div class="item-recommend">💡 推荐理由：迄今最大规模AI学习代价实证研究，揭示短期收益掩盖长期亏损的陷阱</div>
+      <div class="item-source">📍 来源：The Decoder · Strömberg et al.</div>
+      <div class="item-link"><a href="https://the-decoder.com/a-26000-student-study-shows-ais-hidden-learning-cost-takes-two-full-years-to-surface" target="_blank" rel="noopener">https://the-decoder.com/a-26000-student-study-shows-ais-hidden-learning-cost-takes-two-full-years-to-surface</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0702] MIT Universal AI Summit Athens -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-30</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">MIT Universal AI Summit在雅典举办：推动全球AI素养普及</div>
+      <div class="item-desc">MIT Universal AI Summit于6月30日在雅典举行，聚焦欧洲AI创新规模化挑战。MIT Open Learning此前于5月推出Universal AI免费在线课程，从AI新手到行业专家全覆盖，内置AI助教，面向全球非技术背景学习者。</div>
+      <div class="item-recommend">💡 推荐理由：MIT系统性AI素养教育方案全球推广，为高校AI通识教育树立新标杆</div>
+      <div class="item-source">📍 来源：MIT News</div>
+      <div class="item-link"><a href="https://news.mit.edu/2026/universal-ai-pathway-to-ai-fluency-accessible-to-anyone-0512" target="_blank" rel="noopener">https://news.mit.edu/2026/universal-ai-pathway...</a></div>
+    </div>
+  </div>
+<!-- [BATCH-0629] Large language models in education systematic review -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-03</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">WEF</span>
+        <span class="tag tag-domain">AI 素养</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">全球教育</span>
+      </div>
+      <div class="item-title">世界经济论坛发布《塑造学习未来：AI 时代教育就绪度》报告</div>
+      <div class="item-summary">WEF 2026年6月发布重磅报告，指出AI普及正从底层向上渗透：学生和教师在日常学习中自发使用AI工具，但课程、评估和制度体系尚未同步更新。报告呼吁教育系统从被动应对转向主动设计AI时代的教学体系。</div>
+      <div class="item-reason">💡 推荐理由：全球顶级经济智库的教育AI诊断，制度滞后于实践的警示信号</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 World Economic Forum</span>
+        <a href="https://reports.weforum.org/docs/WEF_Shaping_the_Future_of_Learning_2026.pdf" target="_blank">🔗 原文链接 (PDF)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] Nature GenAI 元分析 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-01</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">大模型</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-domain">自适应学习</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">ScienceDirect 系统综述：LLM 在教育中的实证研究全景（2022.11–2025.3）</div>
+      <div class="item-summary">Computers and Education: Artificial Minds 6 月发表系统综述，汇总 2022 年 11 月至 2025 年 3 月间 LLM 在教育领域的所有实证研究，覆盖教学、评估、自适应学习、家校沟通等场景，并提出未来研究方向与伦理框架。</div>
+      <div class="item-reason">💡 推荐理由：教育 LLM 实证研究的最权威系统综述，是行业研究的必读 baseline</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 ScienceDirect (Computers & Education: AI)</span>
+        <a href="https://www.sciencedirect.com/science/article/pii/S2666920X25001699" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0629] Frontiers AI personalized learning -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-01</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">智能批改</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Frontiers 教育 AI 系统综述：智能辅导系统应用最突出，全球研究集中于发达国家</div>
+      <div class="item-summary">Frontiers in Education 发表最新综述，覆盖六大 LLM 教育应用场景。智能辅导系统（ITS）为最突出方向，但大多数高质量研究集中在发达国家，发展中国家严重不足。</div>
+      <div class="item-reason">💡 推荐理由：六大 LLM 教育场景系统梳理，发现全球 AI 教育公平问题</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Frontiers in Education</span>
+        <a href="https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2026.1782626/full" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. arXiv -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">05-09</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">大模型</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">高等教育</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Stanford HAI 2026 AI Index 教育章节：80%美国高中生已用AI做作业</div>
+      <div class="item-desc">Stanford HAI 连续第9年发布AI指数报告，教育章节揭示：80%美国初高中和大学生已使用AI完成学业；仅50%中学有AI政策、6%教师认为政策清晰；CS本科入学下降11%但AI硕士增长17%；AI新PhD增长22%全部流向学术界。</div>
+      <div class="item-recommend">💡 推荐理由：全球最权威AI年度报告的独家教育数据，政策制定的核心参考</div>
+      <div class="item-source">📍 来源：Stanford HAI</div>
+      <div class="item-link"><a href="https://hai.stanford.edu/ai-index/2026-ai-index-report/education" target="_blank" rel="noopener">https://hai.stanford.edu/ai-index/2026-ai-index-report/education</a></div>
+    </div>
+  </div>
+
+<div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">04-03</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">arXiv 论文：多智能体 LLM 社交学习实验显示优于单一导师</div>
+      <div class="item-summary">最新 arXiv 论文通过两项对照实验验证：多智能体 LLM 配置（模拟同伴讨论 + 导师指导）在学习效果上显著优于单一 LLM 导师，为 AI 教育产品从"一对一辅导"转向"社交化学习环境"提供了实证基础。</div>
+      <div class="item-reason">💡 推荐理由：多智能体协作学习效果首次实证，重塑 AI 教育产品设计思路</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 arXiv (2604.02677)</span>
+        <a href="https://arxiv.org/abs/2604.02677" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Stanford SCALE -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">03-23</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Stanford SCALE 发布《AI in K-12 证据基础：2026 年回顾》</div>
+      <div class="item-summary">斯坦福 SCALE 计划发布迄今最严谨的 K-12 AI 研究综述，指出尽管 AI Hub 已收录 800+ 学术论文，但高质量因果研究寥寥，多数集中于数学学科与高等教育场景，K-12 领域严重缺乏严谨实证依据。</div>
+      <div class="item-reason">💡 推荐理由：斯坦福最权威 K-12 AI 研究综述，因果证据缺口警示行业</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Stanford SCALE</span>
+        <a href="https://scale.stanford.edu/sites/default/files/The%20Evidence%20Base%20on%20AI%20in%20K-12%20Report.pdf" target="_blank">🔗 原文链接 (PDF)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Nature -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">03-13</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-domain">自适应学习</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Frontiers in Education：AI 个性化学习系统综述，强调个体差异建模</div>
+      <div class="item-summary">Frontiers in Education 3 月发表 AI 个性化学习系统综述，强调系统设计需考虑学生在认知能力、学习风格、动机等方面的个体差异，提出基于多模态数据的学习者画像构建方法，为下一代自适应学习系统提供理论框架。</div>
+      <div class="item-reason">💡 推荐理由：把"因材施教"从口号转为可工程化的学习者画像框架</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Frontiers in Education</span>
+        <a href="https://www.frontiersin.org/journals/education/articles/10.3389/feduc.2026.1782626/full" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- [NEW] WEF报告 -->
+    <!-- [JUNE] Stanford HAI 2026 AI Index 教育章 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">03-12</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">Nature</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">Nature 发表 PRISMA 元分析：GenAI 技术在教育成果上整体优于传统方法</div>
+      <div class="item-summary">Nature Humanities & Social Sciences Communications 发表系统性元分析，覆盖大量实证研究，核心结论：GenAI技术在教育场景中整体优于传统教学方法和非GenAI技术——为AI教育效果提供了迄今最权威的证据。</div>
+      <div class="item-reason">💡 推荐理由：顶刊Nature证实GenAI教育效果优于传统方法，为行业提供学术背书</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Nature (Humanities & Social Sciences Communications)</span>
+        <a href="https://www.nature.com/articles/s41599-026-06903-y" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] arXiv统一框架 -->
+  <div class="timeline-row last-in-category">
+    <div class="timeline-gutter">
+      <span class="date">03-03</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Nature 发表 Classroom AI 研究：学生理解能力决定 AI 辅导效果上限</div>
+      <div class="item-summary">Nature 期刊论文系统研究了 LLM 在 K-12 课堂中作为"年级特定教师"的表现，核心发现：即使 LLM 回答质量高，若学生无法理解则毫无益处，强调"可理解性"是 AI 辅导效果的关键瓶颈。</div>
+      <div class="item-reason">💡 推荐理由：顶刊 Nature 揭示 AI 教育核心痛点——内容可理解性而非质量</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Nature</span>
+        <a href="https://www.nature.com/articles/s44387-026-00081-7" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+  </div><!-- /tab-c -->
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!--  TAB D · 硬件 & 基础设施                              -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">02-04</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-c"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI 素养</span>
+        <span class="tag tag-domain">NLP</span>
+        <span class="tag tag-attr">学术研究</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">arXiv 论文：AI 教育超越学习成果——整合碎片化研究的统一框架</div>
+      <div class="item-summary">最新 arXiv 论文构建了AI教育研究的统一框架，系统整合了此前碎片化的研究方向。论文超越了"AI是否提升成绩"的单一维度，纳入AI素养、批判性思维、创造力等更广泛的教育目标，为负责任AI教育提供可操作建议。</div>
+      <div class="item-reason">💡 推荐理由：AI教育研究从"效果好"到"为什么好"的方法论升级</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 arXiv (2602.04598)</span>
+        <a href="https://arxiv.org/abs/2602.04598" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. Frontiers -->
+  
+<div class="category-section" id="tab-d">
+  <div class="category-header cat-d">
+    <span class="cat-name">D · 硬件 & 基础设施</span>
+    <span class="cat-count">12 条</span>
+  </div>
+
+  <!-- [BATCH-0713] MONTEE AI 交互式玩偶布局家庭早教 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-09</span>
+      <span class="time">18:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">MONTEE AI</span>
+        <span class="tag tag-attr">投融资</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">学前教育</span>
+        <span class="tag tag-domain">大模型</span>
+      </div>
+      <div class="item-title">MONTEE AI完成首轮融资，搭载大语言模型的AI交互式玩偶布局家庭早教赛道</div>
+      <div class="item-desc">2025年成立的上海AI初创MONTEE AI获徐汇资本领投首轮融资，核心产品为搭载大语言模型的AI玩偶故事机，团队拥有数十年儿童内容版权积累。预计首批产品2026年Q3上线，瞄准千万级营收。</div>
+      <div class="item-recommend">💡 推荐理由：内容版权壁垒+大模型玩偶切入合规家庭早教新蓝海</div>
+      <div class="item-source">📍 来源：创新国潮/产业资本 · 2026-07-09</div>
+      <div class="item-link"><a href="https://cxgn.cn/17437.html" target="_blank" rel="noopener">https://cxgn.cn/17437.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] 柳州首个AI教育实训基地揭牌 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-10</span>
+      <span class="time">14:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">教育硬件</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">柳州首个AI教育实训基地揭牌：摩尔线程国产GPU算力首次深度融入基础教育</div>
+      <div class="item-desc">柳州高级中学、第八中学与摩尔线程、智都科技共建AI教育实训基地。国产全功能GPU算力首入基础教育，搭建"初中实训、高中提升、企业实践"全链条育人通道，为拔尖创新人才早期培养注入"中国芯"动能。</div>
+      <div class="item-recommend">💡 推荐理由：国产GPU算力进入基础教育场景，教育硬件自主创新路径新样本</div>
+      <div class="item-source">📍 来源：柳州日报 · 2026-07-10</div>
+      <div class="item-link"><a href="http://jyj.liuzhou.gov.cn/xwzx/mtjj/202607/t20260713_3772316.shtml" target="_blank" rel="noopener">http://jyj.liuzhou.gov.cn/xwzx/mtjj/202607/t20260713_3772316.shtml</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0709] 全球首款鸿蒙墨水屏学习终端 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-05</span>
+      <span class="time">14:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">华为</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">全球首款鸿蒙墨水屏学习终端在龙岗发布：AI大模型+鸿蒙安全+墨水屏护眼三合一</div>
+      <div class="item-desc">深圳龙岗区发布全球首款鸿蒙AI原生墨水屏学习终端，集成教育大模型AI能力、开源鸿蒙安全互联及无蓝光护眼墨水屏。已在12所试点学校落地，完成试题AI批改166.3万道，对话辅导超18.5万次，覆盖57所中小学。</div>
+      <div class="item-recommend">💡 推荐理由：鸿蒙生态首次以专用学习终端形态进入教育硬件市场，政企校联动落地</div>
+      <div class="item-source">📍 来源：深圳新闻网 · 中国新闻周刊</div>
+      <div class="item-link"><a href="https://www.sznews.com/news/content/2026-07/06/content_32112514.htm" target="_blank" rel="noopener">https://www.sznews.com/news/content/2026-07/06/content_32112514.htm</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0706] 学而思T6旗舰学习机 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-30</span>
+      <span class="time">19:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">好未来</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">学而思发布全新培优AI家教+国际学院英语体系+T6旗舰学习机：AI诊断+互动课堂+硬件一体化升级</div>
+      <div class="item-desc">学而思2026旗舰发布会发布全新培优AI家教（拍作业AI诊断+千人千面方案）、"国际学院"英语学习体系及T6系列旗舰机型，将AI诊断、互动课堂与旗舰硬件整合升级，价格冲万元档位。</div>
+      <div class="item-recommend">💡 推荐理由：头部教育品牌AI家教+硬件一体化升级，代表学习机从硬件竞赛进入AI+内容生态竞争</div>
+      <div class="item-source">📍 来源：新华网 · 新华网科技</div>
+      <div class="item-link"><a href="https://www.xinhuanet.com/tech/20260702/6c2507bdbcad455881a639682237c0fc/c.html" target="_blank" rel="noopener">https://www.xinhuanet.com/tech/20260702/6c2507bdbcad455881a639682237c0fc/c.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0629] 2026 AI Learning Machine Ranking -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-01</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">科大讯飞</span>
+        <span class="tag tag-subject">学而思</span>
+        <span class="tag tag-domain">AI学习机</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">2026年小学生AI学习机推荐：科大讯飞T90 Pro、学而思X5 Ultra领跑</div>
+      <div class="item-desc">IT之家评测：科大讯飞 T90 Pro 主打AI精准学与口语评测，学而思 X5 Ultra 以教研体系为核心差异化，AI学习机已从硬件竞赛进入AI+内容生态竞争阶段。</div>
+      <div class="item-recommend">💡 推荐理由：AI学习机市场2026年中格局图，产品差异化路线清晰</div>
+      <div class="item-source">📍 来源：IT之家</div>
+      <div class="item-link"><a href="https://www.ithome.com/0/958/167.htm" target="_blank" rel="noopener">https://www.ithome.com/0/958/167.htm</a></div>
+    </div>
+  </div>
+
+<div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-01</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">学而思</span>
+        <span class="tag tag-domain">AI学习机</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">学而思 P4/X5 AI 学习机 2026 新品：九章大模型驱动全学段同步辅导</div>
+      <div class="item-summary">好未来旗下学而思发布 2026 款 P4/X5 AI 学习机，搭载自研九章大模型，覆盖小学至高中全学段同步课程，升级护眼大屏与硬件配置。课程资源与 AI 辅导能力领先，但硬件性价比与竞品存在差异。</div>
+      <div class="item-reason">💡 推荐理由：中国 AI 学习机赛道旗舰级产品，自研教育垂直模型值得关注</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 中关村在线 / 搜狐数码</span>
+        <a href="https://pad.zol.com.cn/1122/11221832.html" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 猿辅导 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">05-28</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">科大讯飞</span>
+        <span class="tag tag-subject">好未来</span>
+        <span class="tag tag-domain">AI学习机</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">2026 智能学习机权威排行榜：科大讯飞、小猿、希沃居 TOP3，AI 能力成核心指标</div>
+      <div class="item-summary">IT 之家基于行业数据、用户口碑、技术实力、内容生态、硬件品质、售后服务七大维度发布 2026 智能学习机权威榜：科大讯飞、小猿、希沃位列 TOP3。教育智能硬件全面进入"AIGC + 精准学"时代，AI 能力首次超越资源数量成为关键评价指标。</div>
+      <div class="item-reason">💡 推荐理由：国内 AI 学习机市场格局权威定调，AI 能力成新一代竞争壁垒</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 IT之家</span>
+        <a href="https://www.ithome.com/0/956/575.htm" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- [NEW] 学习平板六大趋势 -->
+    <!-- [JUNE] 2026年小学生AI学习机推荐：科大讯飞T90 Pro、学而 -->
+  <div class="timeline-row last-in-category">
+    <div class="timeline-gutter">
+      <span class="date">04-01</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI学习机</span>
+        <span class="tag tag-domain">智慧黑板</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">全球智慧教育硬件市场 2026-2033 展望：AI 学习机与智慧黑板驱动高增长</div>
+      <div class="item-summary">HTF MI Research 发布最新智慧教育硬件市场报告，指出 AI 驱动的学习机、智能黑板、教育平板正成为增长核心品类。市场结构中等集中，技术创新聚焦 AI 教育功能深度集成，中国市场增速领跑全球。</div>
+      <div class="item-reason">💡 推荐理由：全球智慧教育硬件全景图，AI 学习机品类增长趋势量化依据</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 IntelMarketResearch / HTF MI</span>
+        <a href="https://www.intelmarketresearch.com/smart-education-hardware-market-41779" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+  </div><!-- /tab-d -->
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!--  TAB E · 政策 & 行业报告                              -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">01-28</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI学习机</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">2026 年学习平板市场六大趋势：AI 大模型成为核心竞争力，从基础智能向"拟人化交互"升级</div>
+      <div class="item-summary">腾讯新闻发布2026年学习平板市场趋势预测：AI大模型已成为学习平板核心竞争力，头部品牌纷纷搭载专属教育大模型（作业帮自研、学而思九章、猿辅导等），从拍照搜题升级为AI拟人化教学交互。</div>
+      <div class="item-reason">💡 推荐理由：中国AI学习机市场的全景趋势图，教育垂直模型是核心竞争壁垒</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 腾讯新闻</span>
+        <a href="https://news.qq.com/rain/a/20260128A039X400" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] 艾媒报告 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">01-15</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI学习机</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">艾媒咨询《2025-2026 年中国智能平板学习机市场趋势研究报告》</div>
+      <div class="item-summary">艾媒咨询发布中国智能平板学习机市场趋势报告，分析政策、技术与市场三重驱动下学习机品类的增长逻辑。AI技术革新极大改善和提升了智能平板学习机的交互功能与教学效果。</div>
+      <div class="item-reason">💡 推荐理由：中国AI学习机市场权威数据报告，量化趋势与增长预测</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 艾媒咨询 (iiMedia Research)</span>
+        <a href="https://www.iimedia.cn/c400/105260.html" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. 学而思 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">09:00</span>
+      <span class="dot dot-d"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">猿辅导</span>
+        <span class="tag tag-domain">AI学习机</span>
+        <span class="tag tag-attr">产品发布</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">猿辅导小猿 T6 Pro / X6 AI 学习机：诊学练测大闭环，主打性价比路线</div>
+      <div class="item-summary">猿辅导推出小猿 T6 Pro 和 X6 两款 AI 学习机，以"诊学练测"四步闭环为核心卖点，主打智能诊断薄弱点→精确推荐学习→自适应练习→模拟测试验证，成为学而思的有力竞争者。</div>
+      <div class="item-reason">💡 推荐理由：AI 学习机性价比赛道的标杆产品，诊学练测闭环值得关注</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Bilibili / 搜狐评测</span>
+        <a href="https://www.sohu.com/a/1039009551_121081803" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 智慧教育硬件市场 -->
+  
+<div class="category-section" id="tab-e">
+  <div class="category-header cat-e">
+    <span class="cat-name">E · 政策 & 行业报告</span>
+    <span class="cat-count">21 条</span>
+  </div>
+
+  <!-- [BATCH-0720] EU/OECD AI Literacy Framework -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-14</span>
+      <span class="time">06:38</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">欧盟与OECD联合发布《中小学AI素养框架》(AILit)：4大维度19项能力，将作PISA 2029参考</div>
+      <div class="item-desc">欧盟委员会与OECD联合发布AILit正式版，定义AI素养为技术知识、持久技能和面向未来态度的组合，包含理解与参与AI、创造性使用AI、管理AI、塑造AI四大维度19项能力，明确区分"AI素养"与"AI工具使用"，将作为PISA 2029测评参考。</div>
+      <div class="item-recommend">💡 推荐理由：全球首个跨大洲AI素养标准，PISA 2029参考依据，影响深远</div>
+      <div class="item-source">📍 来源：OECD / 欧盟委员会 · 2026-06-18（中文解读 07-14）</div>
+      <div class="item-link"><a href="https://www.oecd.org/en/publications/empowering-learners-for-the-age-of-ai_65cd27d4-en.html" target="_blank" rel="noopener">https://www.oecd.org/en/publications/empowering-learners-for-the-age-of-ai_65cd27d4-en.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0720] 上海市中小学AI素养评价框架 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-19</span>
+      <span class="time">14:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-domain">个性化学习</span>
+      </div>
+      <div class="item-title">《上海市中小学人工智能素养评价框架》在WAIC 2026发布：覆盖知识理解到伦理责任</div>
+      <div class="item-desc">上海市教师教育学院发布中小学AI素养评价框架，从AI知识理解、技术应用、创新实践、伦理责任四个核心维度构建评价体系，立足AI时代人才培养需求，探索符合中小学教育规律的素养评价标准。</div>
+      <div class="item-recommend">💡 推荐理由：国内首个地方级中小学AI素养评价框架，与OECD框架形成对照</div>
+      <div class="item-source">📍 来源：上观新闻 / WAIC 2026 · 2026-07-19</div>
+      <div class="item-link"><a href="https://www.163.com/dy/article/L2A36L0L055040N3_pdya11y.html" target="_blank" rel="noopener">https://www.163.com/dy/article/L2A36L0L055040N3_pdya11y.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] 国务院印发《教育发展"十五五"规划》 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-01</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">国务院印发《教育发展"十五五"规划》：深入实施"人工智能+教育"行动，推动教育深层次变革</div>
+      <div class="item-desc">国务院日前印发《教育发展"十五五"规划》，明确深入实施国家教育数字化战略，开展"人工智能+教育"行动，推动教育理念、培养模式、考试考核、科研范式和治理机制深层次变革；强化人工智能伦理规范和安全监管。</div>
+      <div class="item-recommend">💡 推荐理由：国家级教育AI战略落地文件，"十五五"教育数字化顶层设计</div>
+      <div class="item-source">📍 来源：人民日报海外版 / 教育部 · 2026-07-07</div>
+      <div class="item-link"><a href="https://hb.people.com.cn/BIG5/n2/2026/0707/c194063-41631241.html" target="_blank" rel="noopener">https://hb.people.com.cn/BIG5/n2/2026/0707/c194063-41631241.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] 四部门印发全民数字素养2026工作要点 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-10</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-domain">大模型</span>
+        <span class="tag tag-attr">行业报告</span>
+      </div>
+      <div class="item-title">中央网信办等四部门印发《2026年提升全民数字素养与技能工作要点》，6方面15项任务聚焦AI素养</div>
+      <div class="item-desc">中央网信办、教育部、工信部、人社部联合印发该《工作要点》，6方面15项重点任务中明确"提升全民人工智能素养"，包括强化AI赋能教育、加快AI人才培育、深化AI普及应用，并促进AI安全规范发展。</div>
+      <div class="item-recommend">💡 推荐理由：AI素养教育首次被列入国家全民数字素养顶层任务</div>
+      <div class="item-source">📍 来源：网信中国 / 朝阳市残联 · 2026-07-10</div>
+      <div class="item-link"><a href="https://www.sohu.com/a/1048352219_121106822" target="_blank" rel="noopener">https://www.sohu.com/a/1048352219_121106822</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] 拉美九国AI教育论坛 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-01</span>
+      <span class="time">12:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-attr">战略合作</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">哥斯达黎加举办拉美九国AI教育论坛，尼加拉瓜展示AI工具目录与机器人课程</div>
+      <div class="item-desc">7月1日哥斯达黎加举办"AI in Education 2026"论坛，9个拉美国家代表团参与。尼加拉瓜展示AI工具目录、面向教师的AI伦理使用手册、小学绿色机器人课程、数学自适应教学平台等，纳入其国家教育战略"Bendiciones y Victorias 2024-2026"。</div>
+      <div class="item-recommend">💡 推荐理由：拉美区域AI教育政策协同与国家课程落地新样本</div>
+      <div class="item-source">📍 来源：TN8 / Foro AI Educacion 2026 · 2026-07-01</div>
+      <div class="item-link"><a href="https://www.ai99.cloud/reports/edtech_report_2026-07-04.html" target="_blank" rel="noopener">https://www.ai99.cloud/reports/edtech_report_2026-07-04.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] 美国纽约/加州推进立法拟禁止儿童AI聊天玩具 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-07</span>
+      <span class="time">14:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-attr">安全/对齐</span>
+        <span class="tag tag-scene">学前教育</span>
+      </div>
+      <div class="item-title">美国纽约州与加州推进立法拟禁止制造&销售儿童AI聊天机器人玩具，5年暂停期为安全评估争取时间</div>
+      <div class="item-desc">纽约州审议S9408A法案禁止AI聊天玩具制造销售，加州提出4年暂停期法案。立法者指出AI玩具通过持续在线建立情感依恋，5岁以下儿童无法区分AI与人类，超过30个州已提出100多项AI相关法案。</div>
+      <div class="item-recommend">💡 推荐理由：全球首例针对儿童AI玩具的立法暂停，AI教育产品合规新标杆</div>
+      <div class="item-source">📍 来源：多知网 · 2026-07-07</div>
+      <div class="item-link"><a href="https://www.163.com/dy/article/L18A2NMT0536W4EI.html" target="_blank" rel="noopener">https://www.163.com/dy/article/L18A2NMT0536W4EI.html</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] 上海发布中小学校科技教育实施指南 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-10</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-domain">STEAM</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">上海发布《中小学校科技教育实施指南(试行)》："AI+科技教育"为特色，构建五大模块十五主题分层育人体系</div>
+      <div class="item-desc">上海市教委发布科技教育实施指南，以"AI+科技教育"为特色，明确小学、初中、高中螺旋上升目标，构建覆盖生命健康、能源环境、智能信息、航空航天、深地深海五大模块内容体系。</div>
+      <div class="item-recommend">💡 推荐理由：首个以AI+科技教育为特色的地方性教育指南，为全国提供先行样本</div>
+      <div class="item-source">📍 来源：解放日报 · 2026-06-26</div>
+      <div class="item-link"><a href="https://m.jfdaily.com/sgh/detail?id=4011358" target="_blank" rel="noopener">https://m.jfdaily.com/sgh/detail?id=4011358</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0706] CHEPP AI高等教育报告 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-02</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">CHEPP发布《AI in Higher Education: Teaching & Learning》报告：AI审慎融入高等教育教学</div>
+      <div class="item-desc">美国高等教育政策与实践联盟(CHEPP)发布报告，概述AI如何被审慎地融入高等教育教学与学习，为大学领导提供战略指导。同期还发布了基础设施与运营篇，聚焦AI部署的校园实践。</div>
+      <div class="item-recommend">💡 推荐理由：美国高等教育权威组织为大学AI教学提供系统性战略指导</div>
+      <div class="item-source">📍 来源：CHEPP</div>
+      <div class="item-link"><a href="https://www.chepp.org/wp-content/uploads/2026/07/CHEPP_AI-IN-HIGHER-EDUCATION-TEACHING-AND-LEARNING.pdf" target="_blank" rel="noopener">https://www.chepp.org/wp-content/uploads/2026/07/CHEPP_AI-IN-HIGHER-EDUCATION-TEACHING-AND-LEARNING.pdf</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0702] 四部门数字素养工作要点 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-03</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">中央网信办等四部门联合印发《2026年提升全民数字素养与技能工作要点》</div>
+      <div class="item-desc">中央网信办、教育部、工信部、人社部四部门联合印发工作要点，部署6方面15项重点任务。核心提出"强化人工智能赋能教育、加快人工智能人才培育、深化AI教育融合"，明确未来三年AI教育全面落地的时间表。</div>
+      <div class="item-recommend">💡 推荐理由：四部门联合发文，将AI教育从教育部单一推动升级为跨部门国家行动</div>
+      <div class="item-source">📍 来源：中国政府网/央广网</div>
+      <div class="item-link"><a href="https://www.gov.cn/lianbo/202605/content_7070654.htm" target="_blank" rel="noopener">https://www.gov.cn/lianbo/202605/content_7070654.htm</a></div>
+    </div>
+  </div>
+<!-- [BATCH-0629] AI in Education 2026 systematic review -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-25</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-domain">AI教育</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">OpenEduCat 发布《AI in Education 2026》报告：UNESCO/OECD/EU 政策与美国 K-12 落地全景</div>
+      <div class="item-summary">OpenEduCat 6 月发布 2026 综述报告，系统梳理 UNESCO、OECD 与 EU AI Act 在教育领域的最新政策立场，并整合美国 NCES 与 EdSurge 的 K-12 AI 落地数据。报告指出：政策制定速度已显著落后于 AI 在课堂中的渗透速度。</div>
+      <div class="item-reason">💡 推荐理由：全球教育 AI 政策与落地数据的年度盘点，是行业决策必备参考</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 OpenEduCat</span>
+        <a href="https://openeducat.org/articles/ai-in-education-2026/" target="_blank">🔗 原文</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0629] WEF Future of Learning Report -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-19</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">挪威</span>
+        <span class="tag tag-domain">AI 素养</span>
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">挪威宣布 2026 年 8 月起小学 1-7 年级全面禁止 AI 使用</div>
+      <div class="item-summary">挪威首相Støre于2026年6月19日宣布：从8月新学年起，小学1-7年级（6-13岁）全面禁止AI工具使用；初中8-10年级仅限教师监督下使用；高中11年级以上鼓励在教师判断下使用。这是继2024年智能手机禁令后，挪威儿童科技政策的第三步，同时配套增加纸质书投资。</div>
+      <div class="item-reason">💡 推荐理由：全球首个AI按年龄分级的教育禁令，可能引发其他国家效仿</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 State of Surveillance / NRK</span>
+        <a href="https://stateofsurveillance.org/news/norway-imposes-near-ban-ai-elementary-school-2026/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] 世界数字教育大会 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-09</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-domain">AI教育</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">WEF《2026 未来学习变革洞察》：AI 自下而上渗透教育，制度与监管严重滞后</div>
+      <div class="item-summary">世界经济论坛 6 月发布《2026 未来学习变革洞察》报告，核心观点：AI 正在自下而上地融入全球教育体系，但教育制度、课程与监管严重滞后，唯有构建"适配 AI 时代"的教育治理框架，才能避免大规模因材施教承诺落空。</div>
+      <div class="item-reason">💡 推荐理由：WEF 全球视角为各国教育 AI 治理敲响"制度滞后"警钟</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 World Economic Forum (via 搜狐编译)</span>
+        <a href="https://www.sohu.com/a/1034060748_121970615" target="_blank">🔗 中文报道</a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- [NEW] 挪威AI禁令 -->
+    <!-- [JUNE] 中国四部门联合发文：AI+教育全面落地，2026年起从试点走 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-07</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI 素养</span>
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-scene">职业教育</span>
+      </div>
+      <div class="item-title">四部门联合发文：AI+教育全面落地，未来三年核心部署文件出台</div>
+      <div class="item-summary">中央网信办、教育部、工信部、人社部四部门于 6 月 3 日联合印发重磅文件，明确提出"强化人工智能赋能教育、加快人工智能人才培育、深化 AI+教育融合应用"，将 AI 素养纳入学生核心能力培养体系。</div>
+      <div class="item-reason">💡 推荐理由：AI 素养正式纳入核心能力，影响所有教育机构的产品与课程设计</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 搜狐教育</span>
+        <a href="https://www.sohu.com/a/1033356214_100188566" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 全球市场报告 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-03</span>
+      <span class="time">10:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-scene">职业教育</span>
+      </div>
+      <div class="item-title">中国四部门联合发文：AI+教育全面落地，2026年起从试点走向普及</div>
+      <div class="item-desc">中央网信办、教育部、工信部、人社部联合印发重磅文件，提出三大强化：AI赋能教育、AI人才培育、AI普及应用。中小学开AI通识课、高校扩招AI专业、企业高校联合培养。中国AI人才缺口超500万。</div>
+      <div class="item-recommend">💡 推荐理由：国家级AI教育顶层设计，定义了未来十年中国教育AI化路线图</div>
+      <div class="item-source">📍 来源：教育部 · 中央网信办 · 工信部 · 人社部</div>
+      <div class="item-link"><a href="https://www.sohu.com/a/1033356214_100188566" target="_blank" rel="noopener">https://www.sohu.com/a/1033356214_100188566</a></div>
+    </div>
+  </div>
+
+<div class="timeline-row last-in-category">
+    <div class="timeline-gutter">
+      <span class="date">06-01</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">教育垂直模型</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">AI in Education 全球市场报告：$83B → $572B，CAGR 约 22%</div>
+      <div class="item-summary">Grand View Research 最新报告显示：全球 AI 教育市场 2025 年估值 83 亿美元，2026 年预计达 114 亿美元，2033 年将飙升至 572 亿美元。HolonIQ 同步发布 2026 Global Education Outlook（160+ 页）。</div>
+      <div class="item-reason">💡 推荐理由：最权威市场规模预测，$572B 目标定义了行业增长天花板</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 Grand View Research / HolonIQ</span>
+        <a href="https://www.grandviewresearch.com/industry-analysis/artificial-intelligence-ai-education-market-report" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+  </div><!-- /tab-e -->
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!--  TAB F · GitHub 教育热门项目                           -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">05-14</span>
+      <span class="time">09:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">教育部</span>
+        <span class="tag tag-domain">教育垂直模型</span>
+        <span class="tag tag-attr">行业报告</span>
+        <span class="tag tag-scene">全球教育</span>
+      </div>
+      <div class="item-title">中国教科院发布《中国智慧教育发展报告（2025—2026）》</div>
+      <div class="item-summary">世界数字教育大会闭幕式上，中国教育科学研究院发布年度智慧教育报告，以"人工智能重新定义教育"为年度主题，系统阐释智慧教育新形态的理念内涵，全景呈现中国智慧教育的政策推进和实践探索。</div>
+      <div class="item-reason">💡 推荐理由：中国AI教育政策的全景白皮书，年度最权威的官方参考文件</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 中国教育科学研究院 / 中国教育网</span>
+        <a href="https://www.edu.cn/xxh/zt/szdh/202605/t20260514_2734529.shtml" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. 五部门 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">05-13</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">教育部</span>
+        <span class="tag tag-domain">AI 素养</span>
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-scene">全球教育</span>
+      </div>
+      <div class="item-title">2026 世界数字教育大会发布 8 项核心成果：师-生-机三元协同成为新范式</div>
+      <div class="item-summary">以"人工智能+教育：变革 发展 治理"为主题的世界数字教育大会在杭州举行，82国参会。核心成果：确立"师-生-机"三元协同教学模式（非AI替代教师而是互补协同）、发布《AI教育伦理参考框架》（禁止/有限/鼓励三类界限）、世界数字教育联盟扩至115成员、发布首批18项高等教育智能体。</div>
+      <div class="item-reason">💡 推荐理由：2026年全球最重要的AI教育大会，定义了行业新范式与伦理边界</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 教育部官网 / 搜狐教育</span>
+        <a href="https://www.moe.gov.cn/jyb_xwfb/xw_zt/moe_357/2026/2026_zt05/" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] 智慧教育报告 -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">04-10</span>
+      <span class="time">08:00</span>
+      <span class="dot dot-e"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">教育垂直模型</span>
+        <span class="tag tag-attr">政策法规</span>
+        <span class="tag tag-scene">K-12</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">教育部等五部门印发《"人工智能+教育"行动计划》</div>
+      <div class="item-summary">教育部联合国家发改委、工信部、科技部、国家数据局五部门正式印发《"人工智能+教育"行动计划》，提出推动人工智能人才培养与素养提升、促进 AI 与教育深度融合，标志中国教育体系"智能素养准入"时代的全面开启。</div>
+      <div class="item-reason">💡 推荐理由：国家级 AI+教育顶层设计文件，影响未来五年教育科技格局</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 中国政府网 / 教育部官网</span>
+        <a href="https://www.gov.cn/lianbo/202604/content_7065269.htm" target="_blank">🔗 原文链接</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 四部门 -->
+  
+<div class="category-section" id="tab-f">
+  <div class="category-header cat-f">
+    <span class="cat-name">F · GitHub 教育热门项目</span>
+    <span class="cat-count">34 条</span>
+  </div>
+
+  <!-- [BATCH-0720] krahets/hello-algo -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time"></span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 122,029</span>
+        <span class="gh-lang">Java</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-domain">算法</span>
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">编程教育</span>
+      </div>
+      <div class="item-title">krahets/hello-algo：《Hello 算法》动画图解数据结构与算法教程，GitHub 122K Star</div>
+      <div class="item-desc">开源项目《Hello 算法》以动画图解、一键运行的方式教授数据结构与算法，支持简中/繁中/英/日多语言，提供Python/Java/C++/Go/Swift/Rust等15+语言代码实现，GitHub Star 122K，是算法教育领域Star最高的开源项目。</div>
+      <div class="item-recommend">💡 推荐理由：动画图解+多语言代码，算法教育现象级开源项目</div>
+      <div class="item-source">📍 来源：GitHub · krahets/hello-algo</div>
+      <div class="item-link"><a href="https://github.com/krahets/hello-algo" target="_blank" rel="noopener">https://github.com/krahets/hello-algo</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0720] microsoft/generative-ai-for-beginners -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time"></span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 105,936</span>
+        <span class="gh-lang">Jupyter Notebook</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-subject">微软</span>
+        <span class="tag tag-domain">大模型</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">编程教育</span>
+      </div>
+      <div class="item-title">microsoft/generative-ai-for-beginners：21课生成式AI初学者课程，GitHub 105K Star</div>
+      <div class="item-desc">微软开源的生成式AI初学者课程，21节课覆盖提示词工程、RAG、多模态、AI Agent等核心主题，含完整代码示例和配套视频，支持多语言，GitHub Star 105K、Fork 56K，是生成式AI教育领域Star最高的开源课程。</div>
+      <div class="item-recommend">💡 推荐理由：微软官方生成式AI系统课，21课覆盖全链路，初学者友好</div>
+      <div class="item-source">📍 来源：GitHub · microsoft/generative-ai-for-beginners</div>
+      <div class="item-link"><a href="https://github.com/microsoft/generative-ai-for-beginners" target="_blank" rel="noopener">https://github.com/microsoft/generative-ai-for-beginners</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0720] rasbt/LLMs-from-scratch -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time"></span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 87,700</span>
+        <span class="gh-lang">Jupyter Notebook</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-domain">大模型</span>
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">编程教育</span>
+      </div>
+      <div class="item-title">rasbt/LLMs-from-scratch：从零实现类ChatGPT大语言模型教学项目，GitHub 87K Star</div>
+      <div class="item-desc">Sebastian Raschka（知名ML作者）开源的教学项目，手把手从零搭建类ChatGPT大语言模型，覆盖注意力机制、Transformer、预训练、微调等全流程，配套书籍《Build a Large Language Model (From Scratch)》，GitHub Star 87K。</div>
+      <div class="item-recommend">💡 推荐理由：从零实现LLM的最佳实战教程，理论+代码深度结合</div>
+      <div class="item-source">📍 来源：GitHub · rasbt/LLMs-from-scratch</div>
+      <div class="item-link"><a href="https://github.com/rasbt/LLMs-from-scratch" target="_blank" rel="noopener">https://github.com/rasbt/LLMs-from-scratch</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] microsoft/ai-agents-for-beginners -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time"></span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 53,100</span>
+        <span class="gh-lang">Jupyter Notebook</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">编程教育</span>
+      </div>
+      <div class="item-title">microsoft/ai-agents-for-beginners：12节课零基础AI Agent课程，GitHub 53K+ Star微软官方</div>
+      <div class="item-desc">微软开源的AI Agent零基础课程《AI Agents for Beginners》，12节课覆盖从基础概念到生产落地的全链路，含中译版、配套视频与代码示例，GitHub Star 53K+、Fork 18K+，定位企业级实战入门。</div>
+      <div class="item-recommend">💡 推荐理由：微软官方AI Agent入门课，企业级实战导向，中译版降低学习门槛</div>
+      <div class="item-source">📍 来源：GitHub · microsoft/ai-agents-for-beginners</div>
+      <div class="item-link"><a href="https://github.com/microsoft/ai-agents-for-beginners" target="_blank" rel="noopener">https://github.com/microsoft/ai-agents-for-beginners</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0713] HKUDS/DeepTutor -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time"></span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 24,300</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">HKUDS/DeepTutor：港大数据智能实验室开源的本地化AI学习助手（多智能体+RAG）</div>
+      <div class="item-desc">香港大学数据智能实验室开源的DeepTutor，支持完全本地部署（个人电脑/NAS），多智能体协同架构+RAG+网络搜索+代码执行+知识图谱，实现"学、练、测、研"一体化教学闭环。强调引导式教学，AGPL-3.0协议。</div>
+      <div class="item-recommend">💡 推荐理由：港大实验室开源的多智能体AI教育框架，本地化保障数据隐私</div>
+      <div class="item-source">📍 来源：GitHub · HKUDS/DeepTutor</div>
+      <div class="item-link"><a href="https://github.com/HKUDS/DeepTutor" target="_blank" rel="noopener">https://github.com/HKUDS/DeepTutor</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0712] TeXada 本地数学Agent -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">07-09</span>
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">OpenBMB</span>
+        <span class="tag tag-domain">数学辅导</span>
+        <span class="tag tag-attr">开源</span>
+      </div>
+      <div class="item-meta">⭐ Star 数：<strong style="color:#D4A017">—</strong>　编程语言：<span style="background:#F1F5F9;padding:2px 8px;border-radius:8px;font-size:11px;color:#64748B">Python</span></div>
+      <div class="item-title">TeXada：基于MiniCPM的本地数学Agent，自然语言转LaTeX、手写公式OCR、自动补全与错误修复</div>
+      <div class="item-desc">社区开发者基于MiniCPM5-1B和MiniCPM-V 4.6构建本地数学智能体。支持自然语言→LaTeX、手写/图像公式OCR→可编辑LaTeX、LaTeX自动补全与错误修复。全本地推理，无需云端，保障隐私。</div>
+      <div class="item-recommend">💡 推荐理由：端侧数学工具链突破，学生和研究者可离线处理数学表达式</div>
+      <div class="item-source">📍 来源：OpenBMB · GitHub · 2026-07-09</div>
+      <div class="item-link"><a href="https://github.com/CacinieAvery/TeXada" target="_blank" rel="noopener">https://github.com/CacinieAvery/TeXada</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0709] free-programming-books -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time"></span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 391,486</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-scene">编程教育</span>
+      </div>
+      <div class="item-title">EbookFoundation/free-programming-books — 自由编程书籍资源合集</div>
+      <div class="item-desc">汇集全球高质量免费编程书籍和学习资源的开源项目，覆盖几乎所有编程语言和技术领域。39万+ Star使其成为GitHub上最受欢迎的教育资源库之一。</div>
+      <div class="item-recommend">💡 推荐理由：39万+ Star编程自学必备仓库，全球开发者自学编程的第一站</div>
+      <div class="item-source">📍 来源：GitHub Trending (2026-07 月榜)　🔗 <a href="https://github.com/EbookFoundation/free-programming-books" target="_blank" rel="noopener">github.com/EbookFoundation/free-programming-books</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0709] ossu/computer-science -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time"></span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 205,824</span>
+        <span class="gh-lang">HTML</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">ossu/computer-science — 免费自学计算机科学完整路径</div>
+      <div class="item-desc">Open Source Society University (OSSU) 提供一套对标正规本科教育的CS自学课程体系，涵盖编程、数学、算法、操作系统、网络等核心课程，全部采用免费MOOC资源，20万+ Star的顶级自学路径。</div>
+      <div class="item-recommend">💡 推荐理由：20万+ Star的CS自学"虚拟大学"，免费获得正规计算机科学教育</div>
+      <div class="item-source">📍 来源：GitHub Trending (2026-07 月榜)　🔗 <a href="https://github.com/ossu/computer-science" target="_blank" rel="noopener">github.com/ossu/computer-science</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0706] build-your-own-x -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time"></span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-attr">开源</span>
+      </div>
+      <div class="gh-meta">⭐ <strong>522,772</strong>　<span class="gh-lang">Markdown</span></div>
+      <div class="item-title">codecrafters-io/build-your-own-x：通过亲手重建技术来掌握编程</div>
+      <div class="item-desc">通过从零重建数据库、操作系统、搜索引擎等核心技术来深入掌握编程原理。涵盖12大类技术方向，累计522K+Star，是编程教育领域最受欢迎的开源学习资源之一。</div>
+      <div class="item-recommend">💡 推荐理由：50万+Star的编程实践学习标杆，"重建而非阅读"的教学理念极具启发性</div>
+      <div class="item-source">📍 来源：GitHub · codecrafters-io</div>
+      <div class="item-link"><a href="https://github.com/codecrafters-io/build-your-own-x" target="_blank" rel="noopener">https://github.com/codecrafters-io/build-your-own-x</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0706] project-based-learning -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time"></span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-attr">开源</span>
+      </div>
+      <div class="gh-meta">⭐ <strong>272,209</strong>　<span class="gh-lang">Python</span></div>
+      <div class="item-title">practical-tutorials/project-based-learning：项目驱动式编程教程精选</div>
+      <div class="item-desc">精选项目驱动式编程教程列表，涵盖C/C++/Python/Java等主流语言，强调动手实践而非理论灌输。累计272K+Star，每月活跃更新。</div>
+      <div class="item-recommend">💡 推荐理由：27万+Star项目驱动学习社区，为编程教育提供丰富的实践项目参考</div>
+      <div class="item-source">📍 来源：GitHub · practical-tutorials</div>
+      <div class="item-link"><a href="https://github.com/practical-tutorials/project-based-learning" target="_blank" rel="noopener">https://github.com/practical-tutorials/project-based-learning</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0702] HKUDS DeepTutor -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time">本月</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 22,000+</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">HKUDS/DeepTutor：港大开源Agent-Native个性化AI学习助手</div>
+      <div class="item-desc">香港大学数据智能实验室开源的AI学习平台，v1.0于2026年4月发布。采用Agent-Native架构，支持多步学习计划生成、交互式知识页面、PDF/视频等多格式内容转学习材料，获22K+ GitHub Stars。</div>
+      <div class="item-recommend">💡 推荐理由：22K Star证明市场对AI原生个性化学习工具的强烈需求</div>
+      <div class="item-source">📍 来源：GitHub · HKUDS</div>
+      <div class="item-link"><a href="https://github.com/HKUDS/DeepTutor" target="_blank" rel="noopener">https://github.com/HKUDS/DeepTutor</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0702] OSSU computer-science -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time">本月</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 205,000+</span>
+        <span class="gh-lang">HTML</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">ossu/computer-science：自学计算机科学完整课程体系</div>
+      <div class="item-desc">Open Source Society University维护的自学CS本科课程路径，精选全球顶尖大学免费在线课程（MIT、哈佛、斯坦福等），覆盖编程、数学、系统、AI等核心领域，205K+ Stars持续增长。</div>
+      <div class="item-recommend">💡 推荐理由：全球最完整的免费CS自学路径，205K Star证明其作为教育基础设施的价值</div>
+      <div class="item-source">📍 来源：GitHub · OSSU</div>
+      <div class="item-link"><a href="https://github.com/ossu/computer-science" target="_blank" rel="noopener">https://github.com/ossu/computer-science</a></div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0702] TheAlgorithms Python -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time">本月</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="gh-meta">
+        <span class="gh-stars">⭐ 222,000+</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-domain">算法</span>
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">编程教育</span>
+      </div>
+      <div class="item-title">TheAlgorithms/Python：所有经典算法的Python实现</div>
+      <div class="item-desc">社区驱动的算法教育项目，用Python实现了排序、搜索、图论、动态规划、机器学习等全部经典算法。222K+ Stars，是GitHub上最受欢迎的编程教育仓库之一，被全球高校广泛用作教学参考。</div>
+      <div class="item-recommend">💡 推荐理由：222K Star的开源算法教科书，AI时代的编程基础教育基石</div>
+      <div class="item-source">📍 来源：GitHub · TheAlgorithms</div>
+      <div class="item-link"><a href="https://github.com/TheAlgorithms/Python" target="_blank" rel="noopener">https://github.com/TheAlgorithms/Python</a></div>
+    </div>
+  </div>
+<!-- [BATCH-0629] f/prompts.chat -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time">月榜</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">大模型</span>
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-attr">开源</span>
+      </div>
+      <div class="item-meta-row">
+        <span class="meta-stars">⭐ 164,479</span>
+        <span class="meta-lang">HTML</span>
+      </div>
+      <div class="item-title">f/prompts.chat — 16 万 Star 的 AI Prompt 学习社区</div>
+      <div class="item-summary">原 Awesome ChatGPT Prompts 的演进版，全球最大的提示词共享与发现平台之一。覆盖 ChatGPT、Claude、Gemini 等主流模型，是 AI 素养与 Prompt Engineering 学习的事实标准资源库。</div>
+      <div class="item-reason">💡 推荐理由：AI 时代最实用的"软技能"学习资源，每位教师都应收藏</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (Monthly)</span>
+        <a href="https://github.com/f/prompts.chat" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0629] 521xueweihan/HelloGitHub -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time">月榜</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-meta-row">
+        <span class="meta-stars">⭐ 163,082</span>
+        <span class="meta-lang">Python</span>
+      </div>
+      <div class="item-title">HelloGitHub — 16 万 Star 的中文开源入门项目推荐月刊</div>
+      <div class="item-summary">521xueweihan 维护的中文开源项目月刊，分享 GitHub 上有趣、入门级的开源项目，每期按编程语言与主题分类推荐，是中文世界最受欢迎的"开源入门指南"，被大量高校作为课程推荐资源。</div>
+      <div class="item-reason">💡 推荐理由：中文世界最稀缺的高质量"开源入门资源"汇总，国内高校教辅利器</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (Monthly)</span>
+        <a href="https://github.com/521xueweihan/HelloGitHub" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [BATCH-0629] huggingface/transformers -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">Trending</span>
+      <span class="time">月榜</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">大模型</span>
+        <span class="tag tag-domain">NLP</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-meta-row">
+        <span class="meta-stars">⭐ 162,001</span>
+        <span class="meta-lang">Python</span>
+      </div>
+      <div class="item-title">huggingface/transformers — 16 万 Star 的现代 AI 模型教学框架</div>
+      <div class="item-summary">全球最流行的预训练模型库与教学框架，覆盖 BERT、GPT、T5、LLaMA 等所有主流架构。其官方教程与课程被斯坦福、CMU 等顶尖高校的 NLP/AI 课程采用为标准教学工具，是 AI 教育的"基础设施"。</div>
+      <div class="item-reason">💡 推荐理由：所有 AI/LLM 课程的"事实标准"工具库，高校教师必须掌握</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (Monthly)</span>
+        <a href="https://github.com/huggingface/transformers" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- [NEW] system-design-primer -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-26</span>
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">系统设计</span>
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">职业教育</span>
+      </div>
+      <div class="item-title">system-design-primer — 系统设计入门圣经，32 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 320,000+</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="item-summary">学习大规模系统设计的经典开源资源，覆盖可扩展性、负载均衡、缓存、数据库分片等核心主题。包含Anki闪卡便于间隔重复学习，是面试准备和系统架构教育的首选资源。</div>
+      <div class="item-reason">💡 推荐理由：系统设计教育的No.1资源，闪卡+间隔重复是AI教育可借鉴的方法</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (all-time top)</span>
+        <a href="https://github.com/donnemartin/system-design-primer" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] project-based-learning -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="date">06-26</span>
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-subject">freeCodeCamp</span>
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">freeCodeCamp — 全球最大免费编程学习平台，45 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 450,540</span>
+        <span class="gh-lang">TypeScript</span>
+      </div>
+      <div class="item-summary">freeCodeCamp.org 的开源代码库与课程体系，可免费学习数学、编程和计算机科学。涵盖完整的 Web 开发、数据科学、机器学习等认证路径，社区驱动，全球数百万学习者。</div>
+      <div class="item-reason">💡 推荐理由：全球最大的开源编程教育项目，AI教育产品可借鉴其社区模式</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (monthly #3)</span>
+        <a href="https://github.com/freeCodeCamp/freeCodeCamp" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. build-your-own-x -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-domain">项目式学习</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">project-based-learning — 项目驱动学习教程大全，22 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 220,000+</span>
+        <span class="gh-lang">Markdown</span>
+      </div>
+      <div class="item-summary">精选的编程项目教程合集，覆盖从零构建各种应用的完整教程：Web开发、游戏、数据库、操作系统、编译器、神经网络等。每个项目都有清晰的分步教程，完美诠释"做中学"理念。</div>
+      <div class="item-reason">💡 推荐理由：PBL（项目式学习）的教科书级实践，AI教育可参考其课程设计逻辑</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (all-time top)</span>
+        <a href="https://github.com/practical-tutorials/project-based-learning" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] javascript-algorithms -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">算法</span>
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">javascript-algorithms — JS 实现全部经典算法与数据结构，19 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 190,000+</span>
+        <span class="gh-lang">JavaScript</span>
+      </div>
+      <div class="item-summary">用JavaScript实现所有经典算法和数据结构的开源项目，每个算法配有详细解释和复杂度分析。以JavaScript这种最广泛使用的语言降低学习门槛，是算法入门教育的标杆项目。</div>
+      <div class="item-reason">💡 推荐理由：算法教育的语言门槛降低典范，AI辅助教学的最佳内容素材库</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (all-time top)</span>
+        <a href="https://github.com/trekhleb/javascript-algorithms" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] public-apis -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-domain">教程</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">build-your-own-x — 从零重建技术的编程大师课，52 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 519,732</span>
+        <span class="gh-lang">Markdown</span>
+      </div>
+      <div class="item-summary">通过从零重建数据库、Git、Docker 等热门技术来掌握编程。包含数百个精心策划的教程，覆盖从基础数据结构到分布式系统的全栈学习路径。</div>
+      <div class="item-reason">💡 推荐理由：项目式学习（PBL）的开源典范，"做中学"最高星项目</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (monthly #1)</span>
+        <a href="https://github.com/codecrafters-io/build-your-own-x" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. developer-roadmap -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-domain">自适应学习</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">职业教育</span>
+      </div>
+      <div class="item-title">developer-roadmap — 交互式开发者学习路线图，36 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 358,331</span>
+        <span class="gh-lang">TypeScript</span>
+      </div>
+      <div class="item-summary">为开发者提供交互式学习路线图、指南和教育内容，覆盖前端、后端、DevOps、AI 等 20+ 方向。AI 教育产品可参考其可视化学习路径设计。</div>
+      <div class="item-reason">💡 推荐理由：学习路径可视化的最佳实践，AI 教育产品路线设计的参考模板</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (monthly #7)</span>
+        <a href="https://github.com/nilbuild/developer-roadmap" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. OSSU CS -->
+  <div class="timeline-row">
+       <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-domain">开放数据</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">public-apis — 免费 API 合集，33 万 Star 的开发者必备资源</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 330,000+</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="item-summary">全球最大的免费API索引库，覆盖教育、AI/ML、天气、金融、健康等数十个领域的公开接口。是编程学习和项目开发的实践资源宝库，也是AI教育工具获取真实数据的理想入口。</div>
+      <div class="item-reason">💡 推荐理由：全球最大API资源库，教育类API丰富，AI教育实战项目的数据库</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (all-time top)</span>
+        <a href="https://github.com/public-apis/public-apis" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- [NEW] 30-seconds-of-code -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-domain">微学习</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">30-seconds-of-code — 30 秒学会一个代码片段，12 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 120,000+</span>
+        <span class="gh-lang">JavaScript</span>
+      </div>
+      <div class="item-summary">提供数百个可在30秒内理解的JavaScript/Python/React等代码片段，每个片段配有简明解释和用例。微学习（Micro-learning）理念在编程教育领域的标杆实践。</div>
+      <div class="item-reason">💡 推荐理由：微学习理念的最佳开源实现，AI教育可借鉴其碎片化内容设计</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (all-time top)</span>
+        <a href="https://github.com/Chalarangelo/30-seconds-of-code" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. freeCodeCamp -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">OSSU Computer Science — 自学计算机科学完整课程，20 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 205,268</span>
+        <span class="gh-lang">HTML</span>
+      </div>
+      <div class="item-summary">提供免费自学计算机科学的完整学位路径，精选全球顶级大学公开课（MIT、Stanford 等），从编程基础到操作系统全覆盖。</div>
+      <div class="item-reason">💡 推荐理由：开源"学位替代方案"的标杆，展示了 AI+自适应课程的未来可能</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (monthly #15)</span>
+        <a href="https://github.com/ossu/computer-science" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. free-programming-books -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">free-programming-books — 免费编程书籍库，39 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 390,807</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="item-summary">全球最大免费编程书籍合集，覆盖 30+ 语言和数百个技术主题。包含大量 AI/ML 教育资源的索引，是 AI 教育内容策展的参考标杆。</div>
+      <div class="item-reason">💡 推荐理由：全球最大开源教育资源索引库，内容策展模式值得学习</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (monthly #5)</span>
+        <a href="https://github.com/EbookFoundation/free-programming-books" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. TheAlgorithms/Python -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">编程教育</span>
+        <span class="tag tag-domain">算法</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">TheAlgorithms/Python — 全部算法 Python 实现，22 万 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 222,210</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="item-summary">用 Python 实现全部经典算法与数据结构的开源项目，被广泛用作编程教学资源。社区持续维护，注释清晰，适合 AI 教育场景中的数据结构和算法教学。</div>
+      <div class="item-reason">💡 推荐理由：算法教学的开源标准库，AI 自动批改和代码评估的数据源</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Trending (monthly #13)</span>
+        <a href="https://github.com/TheAlgorithms/Python" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Skill-Anything -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI题库</span>
+        <span class="tag tag-domain">自适应学习</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">成人教育</span>
+      </div>
+      <div class="item-title">Skill-Anything — 任意资源一键转为互动学习包，296 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 296</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="item-summary">将任何学习材料（PDF、视频、网页、音频、文本）转化为包含测验、闪卡和间隔重复的交互式学习包。一条命令生成 12 节结构化课程，内置 AI 导师。</div>
+      <div class="item-reason">💡 推荐理由：AI 自动课程生成的新锐项目，"任意资源→课程"的产品形态</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Search (education+AI)</span>
+        <a href="https://github.com/SYuan03/Skill-Anything" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. Bloom AI Tutor -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI教师</span>
+        <span class="tag tag-domain">个性化学习</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">高等教育</span>
+      </div>
+      <div class="item-title">Bloom — 基于 2-Sigma 效应的私人 AI 导师，176 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 176</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="item-summary">基于 Bloom 的 2-Sigma 研究，使用 Claude API 实现的私人 AI 导师。能感知学习者的实际学习模式，据此教授下一课内容，追求一对一辅导的掌握学习效果。</div>
+      <div class="item-reason">💡 推荐理由：Bloom 2-Sigma 效应 + AI 结合的开源实践，个性化辅导的前沿探索</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Search (education+AI)</span>
+        <a href="https://github.com/Li-Evan/Bloom" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. EduMCP -->
+  <div class="timeline-row">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">AI Agent</span>
+        <span class="tag tag-domain">教育垂直模型</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">EduMCP — MCP 协议在教育领域的应用框架，155 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 155</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="item-summary">将 Model Context Protocol (MCP) 集成到教育场景的开源框架，致力于实现教育数据与 AI Agent 的无缝对接，为教育 AI 产品提供标准化的工具调用接口。</div>
+      <div class="item-reason">💡 推荐理由：MCP 协议在教育领域的首次开源应用，定义了教育 AI Agent 标准</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Search (education+AI)</span>
+        <a href="https://github.com/aieducations/edumcp" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. Educational RAG -->
+  <div class="timeline-row last-in-category">
+    <div class="timeline-gutter">
+      <span class="time">Trending</span>
+      <span class="dot dot-f"></span>
+    </div>
+    <div class="item-card">
+      <div class="stars">★★★</div>
+      <div class="tags">
+        <span class="tag tag-domain">NLP</span>
+        <span class="tag tag-domain">AI题库</span>
+        <span class="tag tag-attr">开源</span>
+        <span class="tag tag-scene">K-12</span>
+      </div>
+      <div class="item-title">Educational RAG System — 面向教育的 RAG 智能问答系统，138 Star</div>
+      <div class="item-meta-row">
+        <span class="gh-stars">⭐ 138</span>
+        <span class="gh-lang">Python</span>
+      </div>
+      <div class="item-summary">融合关键词匹配与语义检索双引擎的教育 RAG 系统，MySQL + Redis + Milvus 技术栈。先走数据库精确检索，无结果时再进入 RAG 语义搜索，兼顾准确性与覆盖度。</div>
+      <div class="item-reason">💡 推荐理由：教育 RAG 的开源参考实现，双引擎检索架构值得教育产品借鉴</div>
+      <div class="item-source-line">
+        <span class="item-source-name">📍 GitHub Search (education+AI)</span>
+        <a href="https://github.com/Happy-Chen-CH/Educational_RAG_System" target="_blank">🔗 GitHub</a>
+      </div>
+    </div>
+  </div>
+  </div><!-- /tab-f -->
+
+  <!-- ====== Footer ====== -->
+  <div class="page-footer">
+    <p>数据源 aihot.virxact.com + GitHub Trending API + 全球教育渠道 WebSearch | 持续更新中</p>
+  </div>
+
+</div>
+
+<script>
+function switchTab(tabId) {
+  // Hide all tab content
+  document.querySelectorAll('.category-section').forEach(s => s.classList.remove('visible'));
+  // Show selected
+  const target = document.getElementById(tabId);
+  if (target) target.classList.add('visible');
+
+  // Update active button
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.querySelector(`[data-tab="${tabId}"]`);
+  if (btn) btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>
