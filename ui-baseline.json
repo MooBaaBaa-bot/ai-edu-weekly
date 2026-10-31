@@ -1,9 +1,9 @@
 {
   "version": 1,
   "reviewedAt": "2026-11-01",
-  "description": "Emilia kraft paper, book accents, ornaments and subdued note surfaces. Content jobs must not rewrite this baseline.",
+  "description": "Emilia AI Studio editorial interiors; independent volumes with return-to-bookshelf navigation. Homepage and content/storage preserved.",
   "files": {
-    "emilia-kraft.css": "98e3609beae140a586ce8155730c163c24a36f417e8d3dfaf939259f3e760180",
+    "emilia-kraft.css": "02921bb8f78a23bae81dcd49f90319d4efc60f059e73abe918a5dc219302425f",
     "emilia-icons-LICENSE.txt": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
     "index.html": "d133333c34ce3e9a3ec2241095f633f083221e862b4ec77a5e463bd77cee3a57",
     "scripts/check_ui.py": "80be6da49608b507dd499594be60b25f9e514f29a0e0208e7b4d8bc2cd6fb290"
@@ -15,7 +15,7 @@
         {
           "id": "emilia-kraft-theme",
           "rel": "stylesheet",
-          "href": "emilia-kraft.css?v=20261101-paper2"
+          "href": "emilia-kraft.css?v=20261101-studio1"
         }
       ],
       "ui_blocks": [
@@ -45,10 +45,10 @@
         ]
       ],
       "navigation": [
-        "fc0d1b1865bf8577db56cd39178b268aa157debf07bfb0540d4d0c310ab276f3",
+        "e70ae0e7a8da1368bb2a026fb22461697e3bafdf9e9b3c6c31c6d33b42e8aa3a",
         "b632779d224d51d9d68cdaa5cb763169b1c85ab34303db1534ce1604ae71fb87"
       ],
-      "icons": 2,
+      "icons": 1,
       "allowed_inline_styles": [
         "color:#d1e1d7",
         "padding:24px"
