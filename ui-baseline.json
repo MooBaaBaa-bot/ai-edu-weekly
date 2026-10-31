@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-11-01",
+  "description": "Emilia kraft paper, book accents, ornaments and subdued note surfaces. Content jobs must not rewrite this baseline.",
+  "files": {
+    "emilia-kraft.css": "98e3609beae140a586ce8155730c163c24a36f417e8d3dfaf939259f3e760180",
+    "emilia-icons-LICENSE.txt": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+    "index.html": "d133333c34ce3e9a3ec2241095f633f083221e862b4ec77a5e463bd77cee3a57",
+    "scripts/check_ui.py": "5a42fbb19913e0834b972ff4969640e054547f54daf1d4b744f88a857d7b624e"
+  },
+  "pages": {
+    "AI教育周报.html": {
+      "theme": "weekly",
+      "stylesheets": [
+        {
+          "id": "emilia-kraft-theme",
+          "rel": "stylesheet",
+          "href": "emilia-kraft.css?v=20261101-paper2"
+        }
+      ],
+      "ui_blocks": [
+        [
+          "style",
+          {},
+          "5d50400142710aee4913343e1abe4eb54ae834422248ebf92fc628b4203070de"
+        ],
+        [
+          "style",
+          {
+            "id": "reading-room-theme"
+          },
+          "1e24cffcb05646549565b9c1d7be972ea5cfe9ee2370d4d8edae73cf8d0e38f9"
+        ],
+        [
+          "style",
+          {
+            "id": "reading-room-column-palette"
+          },
+          "b2bac067203fd35ef28e1f87a38a8c932fff22c01f2af75790026e42bbcab966"
+        ],
+        [
+          "script",
+          {},
+          "8e8318ffebc44128b2527cb9786ec7587dc9822a88755a62c93dc0d1361e275c"
+        ]
+      ],
+      "navigation": [
+        "fc0d1b1865bf8577db56cd39178b268aa157debf07bfb0540d4d0c310ab276f3",
+        "b632779d224d51d9d68cdaa5cb763169b1c85ab34303db1534ce1604ae71fb87"
+      ],
+      "icons": 2,
+      "allowed_inline_styles": [
+        "color:#d1e1d7",
+        "padding:24px"
+      ]
+    }
+  },
+  "site": "https://moobaabaa-bot.github.io/ai-edu-weekly/"
+}
