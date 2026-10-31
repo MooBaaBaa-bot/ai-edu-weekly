@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="AI教育周报：追踪行业、产品、学术研究、硬件、政策与教育开源项目。每周一更新。">
-<meta name="theme-color" content="#193f33">
+<meta name="theme-color" content="#e6eaef">
 <title>AI 教育周报 · 看见教育的下一步</title>
 <style>
 :root{--bg:#f7f8f3;--paper:#fff;--ink:#202e29;--muted:#617168;--line:#dde4db;--green:#164d40;--soft:#eaf1e9;--gold:#8b6025;--radius:18px}
@@ -25,6 +25,18 @@ body{background:var(--bg);color:var(--ink);font-family:var(--rr-sans);-webkit-fo
 .rr-page .masthead{height:auto;min-height:80px}.rr-page .brand{font-family:var(--rr-serif);font-size:20px;font-weight:600}.rr-page .mark{border-radius:18px 18px 3px 3px;background:transparent;border:1px solid var(--green);color:var(--green)}.rr-page .edition{font:10px var(--rr-sans);letter-spacing:2px}.rr-page .hero{background:var(--green);color:var(--paper);padding:40px;margin:12px 0 28px;border-radius:7px;gap:32px}.rr-page .hero h1{font-weight:500;letter-spacing:1px;font-size:48px}.rr-page .hero h1 span{color:var(--rr-gold)}.rr-page .hero .eyebrow{color:var(--rr-gold);font-size:11px;font-weight:400}.rr-page .intro,.rr-page .issue-label,.rr-page .issue small{color:#c0d0bf}.rr-page .issue{border-color:#6e8678}.rr-page .issue-date{color:var(--rr-gold)}.rr-page .status-dot{background:var(--rr-gold)}.rr-page .card h3{font-size:23px;font-weight:600;letter-spacing:0}.rr-page .summary{font-size:15px;color:var(--muted)}.rr-page .card,.rr-page .aside-card,.rr-page .toolbar{border-radius:7px}.rr-page .reason{border-radius:3px;border-left:2px solid var(--accent);color:var(--accent)}.rr-page .aside-card{background:var(--paper)}.rr-page .aside-card.green{background:var(--green)}.rr-page .aside-card h2{font-size:18px}.rr-page .results-head h2{font-size:26px}.rr-page .load{border-radius:4px}
 @media(max-width:740px){.rr-page .hero{padding:28px 24px;grid-template-columns:1fr}.rr-page .hero h1{font-size:38px}.rr-page .intro{font-size:16px}.rr-page .issue-date{font-size:25px}.rr-page .brand{font-size:18px}.rr-page .card h3{font-size:21px}.rr-page .summary{font-size:16px}}
 @media(max-width:740px){.rr-page .hero h1 span{display:block}}</style>
+<style id="reading-room-column-palette">
+/* Column palette matched to its Reading Room entrance card. Preserve on content updates. */
+:root{--accent:#465b72;--green:#465b72;--soft:#e6eaef;--green-tint:#e6eaef;--green-2:#465b72;--green-3:#465b72;--green-line:#d2d9e1;--ink:#2c3d50;--ink-2:#2c3d50;--ink-3:#5c6876;--muted:#5c6876;--line:#d2d9e1;--line-strong:#d2d9e1;--line-soft:#d2d9e1;--gold:#465b72;--gold-2:#465b72;--gold-tint:#e6eaef;--gold-line:#d2d9e1;--rr-gold:#465b72;--bg:#f5f3ed;--paper:#fdfcf8;--paper-2:#fdfcf8;--bg-deep:#e6eaef}
+.rr-page a:focus-visible,.rr-page button:focus-visible,.rr-page input:focus-visible,.rr-page select:focus-visible,.rr-page summary:focus-visible{outline-color:var(--accent)}
+.rr-page .rr-links a[aria-current=page]{background:var(--soft);color:var(--accent);box-shadow:inset 0 0 0 1px var(--line)}.rr-page .rr-seal{color:var(--accent);border-color:var(--accent)}
+.rr-page .page-header,.rr-page .hero,.rr-page .masthead:not(header){background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+.rr-page .page-header h1,.rr-page .hero h1,.rr-page .hero h1 span,.rr-page .masthead__title{color:var(--accent)}
+.rr-page .page-header .eyebrow,.rr-page .hero .eyebrow,.rr-page .page-header .subtitle,.rr-page .page-header .updated,.rr-page .intro,.rr-page .issue-label,.rr-page .issue small{color:var(--accent)}
+.rr-page .issue,.rr-page .masthead__top{border-color:var(--line)}.rr-page .issue-date,.rr-page .issue p{color:var(--accent)}.rr-page .status-dot{background:var(--accent)}
+.rr-page .tag,.rr-page .category-pill,.rr-page .reason{background:var(--soft);color:var(--accent)}.rr-page .summary,.rr-page .item-summary{color:var(--muted)}
+.rr-page .save-button[aria-pressed=true],.rr-page .bookmark[aria-pressed=true]{background:var(--soft);color:var(--accent)}
+ .rr-page .aside-card.green{background:var(--soft);color:var(--ink);border-color:var(--line)}.rr-page .aside-card.green p,.rr-page .aside-card.green small,.rr-page .aside-card.green .eyebrow{color:var(--accent)!important}.rr-page .aside-divider{background:var(--line)}.rr-page .chip[aria-pressed=true]{background:var(--accent);color:var(--paper)}.rr-page .load{background:var(--accent)}.rr-page .load:hover{background:var(--ink)}.rr-page .input-shell,.rr-page .back-top,.rr-page .empty{background:var(--paper)}.rr-page .card-bottom{border-color:var(--line)}</style>
 </head>
 <body class="rr-page">
 <nav class="rr-nav" aria-label="阅读站栏目"><div class="rr-nav-inner"><a class="rr-home" href="https://moobaabaa-bot.github.io/ed-tech-opportunity/hub.html"><span class="rr-seal" aria-hidden="true">阅</span>返回阅读站</a><div class="rr-links"><a href="https://moobaabaa-bot.github.io/ed-tech-opportunity/Ed_Tech_Opportunity.html">机会库</a><a href="https://moobaabaa-bot.github.io/ai-edu-weekly/AI%E6%95%99%E8%82%B2%E5%91%A8%E6%8A%A5.html" aria-current="page">AI 周报</a><a href="https://moobaabaa-bot.github.io/instructional-design-daily/index.html">每日概念</a></div></div></nav>
