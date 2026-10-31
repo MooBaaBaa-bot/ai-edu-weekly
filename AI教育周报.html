@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="AI教育周报：追踪行业、产品、学术研究、硬件、政策与教育开源项目。每周一更新。">
-<meta name="theme-color" content="#164d40">
+<meta name="theme-color" content="#193f33">
 <title>AI 教育周报 · 看见教育的下一步</title>
 <style>
 :root{--bg:#f7f8f3;--paper:#fff;--ink:#202e29;--muted:#617168;--line:#dde4db;--green:#164d40;--soft:#eaf1e9;--gold:#8b6025;--radius:18px}
@@ -15,8 +15,19 @@
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 @media print{.toolbar,aside,.bookmark,.back-top,.load,.top-link,.save-filter{display:none!important}.content-layout{display:block}.card{break-inside:avoid}.hero{padding:20px 0}}
 </style>
+<style id="reading-room-theme">
+/* Reading Room · shared visual system. Keep this block when adding new content. */
+:root{--bg:#f5f3ed;--paper:#fdfcf8;--paper-2:#f5f3ed;--ink:#233c32;--muted:#606b63;--line:#d7dcd1;--green:#193f33;--accent:#355848;--soft:#e7ecdf;--gold:#89662d;--radius:7px;--rr-gold:#cfbb8c;--rr-serif:"Songti SC","STSong","Noto Serif CJK SC",Georgia,serif;--rr-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+body{background:var(--bg);color:var(--ink);font-family:var(--rr-sans);-webkit-font-smoothing:antialiased}body::before{display:none}h1,h2,h3{font-family:var(--rr-serif)}::selection{background:var(--green);color:var(--paper)}a,button{touch-action:manipulation}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #966022;outline-offset:4px}.rr-nav{position:relative;z-index:41;width:100%;background:var(--bg);border-bottom:1px solid var(--line)}.rr-nav-inner{max-width:1240px;margin:auto;padding:12px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px}.rr-home{display:flex;align-items:center;gap:10px;text-decoration:none!important;color:var(--ink);font-size:15px;font-weight:600;min-height:44px}.rr-seal{display:grid;place-items:center;width:32px;height:36px;border:1px solid var(--green);border-radius:16px 16px 3px 3px;font:21px var(--rr-serif)}.rr-links{display:flex;gap:8px;flex-wrap:wrap}.rr-links a{font-size:12px;color:var(--muted);text-decoration:none;min-height:44px;display:flex;align-items:center;padding:8px 14px;border-radius:4px}.rr-links a:hover{background:var(--soft);color:var(--green)}.rr-links a[aria-current=page]{background:var(--green);color:var(--paper)}input,select,button,summary{min-height:44px}input,select{border-color:var(--line)!important;background-color:var(--paper)!important;border-radius:5px!important}button{border-radius:5px}.rr-page .tag{background:var(--soft);color:var(--accent);border-radius:3px}.rr-page .item-title{font-family:var(--rr-serif)}
+@media(max-width:740px){.rr-nav-inner{padding:12px 18px;gap:8px;flex-wrap:wrap}.rr-home{font-size:14px}.rr-links{gap:4px}.rr-links a{padding:8px 10px;font-size:12px}.rr-page input{font-size:16px}.rr-page h1{overflow-wrap:anywhere}.rr-page .item-summary,.rr-page .summary{font-size:16px;line-height:1.85}.rr-page .item-title,.rr-page .card h3{font-size:20px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.rr-page .masthead{height:auto;min-height:80px}.rr-page .brand{font-family:var(--rr-serif);font-size:20px;font-weight:600}.rr-page .mark{border-radius:18px 18px 3px 3px;background:transparent;border:1px solid var(--green);color:var(--green)}.rr-page .edition{font:10px var(--rr-sans);letter-spacing:2px}.rr-page .hero{background:var(--green);color:var(--paper);padding:40px;margin:12px 0 28px;border-radius:7px;gap:32px}.rr-page .hero h1{font-weight:500;letter-spacing:1px;font-size:48px}.rr-page .hero h1 span{color:var(--rr-gold)}.rr-page .hero .eyebrow{color:var(--rr-gold);font-size:11px;font-weight:400}.rr-page .intro,.rr-page .issue-label,.rr-page .issue small{color:#c0d0bf}.rr-page .issue{border-color:#6e8678}.rr-page .issue-date{color:var(--rr-gold)}.rr-page .status-dot{background:var(--rr-gold)}.rr-page .card h3{font-size:23px;font-weight:600;letter-spacing:0}.rr-page .summary{font-size:15px;color:var(--muted)}.rr-page .card,.rr-page .aside-card,.rr-page .toolbar{border-radius:7px}.rr-page .reason{border-radius:3px;border-left:2px solid var(--accent);color:var(--accent)}.rr-page .aside-card{background:var(--paper)}.rr-page .aside-card.green{background:var(--green)}.rr-page .aside-card h2{font-size:18px}.rr-page .results-head h2{font-size:26px}.rr-page .load{border-radius:4px}
+@media(max-width:740px){.rr-page .hero{padding:28px 24px;grid-template-columns:1fr}.rr-page .hero h1{font-size:38px}.rr-page .intro{font-size:16px}.rr-page .issue-date{font-size:25px}.rr-page .brand{font-size:18px}.rr-page .card h3{font-size:21px}.rr-page .summary{font-size:16px}}
+@media(max-width:740px){.rr-page .hero h1 span{display:block}}</style>
 </head>
-<body>
+<body class="rr-page">
+<nav class="rr-nav" aria-label="阅读站栏目"><div class="rr-nav-inner"><a class="rr-home" href="https://moobaabaa-bot.github.io/ed-tech-opportunity/hub.html"><span class="rr-seal" aria-hidden="true">阅</span>返回阅读站</a><div class="rr-links"><a href="https://moobaabaa-bot.github.io/ed-tech-opportunity/Ed_Tech_Opportunity.html">机会库</a><a href="https://moobaabaa-bot.github.io/ai-edu-weekly/AI%E6%95%99%E8%82%B2%E5%91%A8%E6%8A%A5.html" aria-current="page">AI 周报</a><a href="https://moobaabaa-bot.github.io/instructional-design-daily/index.html">每日概念</a></div></div></nav>
 <a class="skip" href="#results">跳至资讯列表</a>
 <div class="wrap">
  <header class="masthead"><a class="brand" href="./"><span class="mark" aria-hidden="true">ae</span>AI 教育周报<span class="edition">THE EDUCATION EDIT</span></a><a class="top-link" href="https://github.com/MooBaaBaa-bot/ai-edu-weekly" target="_blank" rel="noopener noreferrer">GitHub 仓库 ↗</a></header>
