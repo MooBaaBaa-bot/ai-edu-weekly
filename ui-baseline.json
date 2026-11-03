@@ -1,12 +1,13 @@
 {
   "version": 1,
-  "reviewedAt": "2026-11-01",
-  "description": "Emilia AI Studio editorial interiors; independent volumes with return-to-bookshelf navigation. Homepage and content/storage preserved.",
+  "reviewedAt": "2026-11-03",
+  "description": "Reviewed date timelines for scheduled reading sections; kraft palettes, homepage, practice course, historical data and record storage preserved.",
   "files": {
-    "emilia-kraft.css": "02921bb8f78a23bae81dcd49f90319d4efc60f059e73abe918a5dc219302425f",
+    "emilia-kraft.css": "256a145a5e225d23598427ca6e7468c273cce8516f45343ddd94b6b4957e481c",
     "emilia-icons-LICENSE.txt": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
     "index.html": "d133333c34ce3e9a3ec2241095f633f083221e862b4ec77a5e463bd77cee3a57",
-    "scripts/check_ui.py": "80be6da49608b507dd499594be60b25f9e514f29a0e0208e7b4d8bc2cd6fb290"
+    "scripts/check_ui.py": "80be6da49608b507dd499594be60b25f9e514f29a0e0208e7b4d8bc2cd6fb290",
+    "emilia-timeline.js": "4d000303e4eea84a39f72ebeb9541d7ebecd02dcb40082f8294d664c48265255"
   },
   "pages": {
     "AI教育周报.html": {
@@ -15,7 +16,7 @@
         {
           "id": "emilia-kraft-theme",
           "rel": "stylesheet",
-          "href": "emilia-kraft.css?v=20261101-studio1"
+          "href": "emilia-kraft.css?v=20261103-timeline1"
         }
       ],
       "ui_blocks": [
@@ -40,8 +41,15 @@
         ],
         [
           "script",
+          {
+            "src": "emilia-timeline.js?v=20261103-timeline1"
+          },
+          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        ],
+        [
+          "script",
           {},
-          "8e8318ffebc44128b2527cb9786ec7587dc9822a88755a62c93dc0d1361e275c"
+          "cd675fd365f909f816654b2bf3b3503654c5f62de8adc19c65fa388154d99918"
         ]
       ],
       "navigation": [

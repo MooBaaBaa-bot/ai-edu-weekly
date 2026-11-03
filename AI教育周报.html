@@ -38,7 +38,8 @@ body{background:var(--bg);color:var(--ink);font-family:var(--rr-sans);-webkit-fo
 .rr-page .save-button[aria-pressed=true],.rr-page .bookmark[aria-pressed=true]{background:var(--soft);color:var(--accent)}
  .rr-page .aside-card.green{background:var(--soft);color:var(--ink);border-color:var(--line)}.rr-page .aside-card.green p,.rr-page .aside-card.green small,.rr-page .aside-card.green .eyebrow{color:var(--accent)!important}.rr-page .aside-divider{background:var(--line)}.rr-page .chip[aria-pressed=true]{background:var(--accent);color:var(--paper)}.rr-page .load{background:var(--accent)}.rr-page .load:hover{background:var(--ink)}.rr-page .input-shell,.rr-page .back-top,.rr-page .empty{background:var(--paper)}.rr-page .card-bottom{border-color:var(--line)}</style>
 <!-- Preserve the Emilia kraft theme during content updates. -->
-<link id="emilia-kraft-theme" rel="stylesheet" href="emilia-kraft.css?v=20261101-studio1">
+<link id="emilia-kraft-theme" rel="stylesheet" href="emilia-kraft.css?v=20261103-timeline1">
+<script src="emilia-timeline.js?v=20261103-timeline1"></script>
 </head>
 <body class="rr-page">
 <nav class="emilia-library-bar" aria-label="返回书架"><div class="emilia-library-inner"><a class="emilia-back" href="https://moobaabaa-bot.github.io/ed-tech-opportunity/hub.html"><span aria-hidden="true">←</span> 返回书架</a><div class="emilia-signature"><span class="rr-seal emilia-bookplate" aria-hidden="true"><svg class="emilia-icon" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" > <rect width="8" height="18" x="3" y="3" rx="1" /> <path d="M7 3v18" /> <path d="M20.4 18.9c.2.5-.1 1.1-.6 1.3l-1.9.7c-.5.2-1.1-.1-1.3-.6L11.1 5.1c-.2-.5.1-1.1.6-1.3l1.9-.7c.5-.2 1.1.1 1.3.6Z" /> </svg> </span><span>EMILIA<small>PERSONAL READING LIBRARY</small></span></div><span class="emilia-volume">AI EDUCATION WEEKLY</span></div></nav>
@@ -75,9 +76,9 @@ function card(r){
  return '<article class="card" data-id="'+esc(r.id)+'"><div class="card-top"><div class="meta"><span class="category-label">'+esc(categories[r.category])+'</span><span class="sep"></span><span>'+esc(date)+'</span>'+(r.batch===latest?'<span>本期</span>':'')+'</div><span class="rating" aria-label="推荐级别 '+r.rating+' 星">'+ '★'.repeat(Math.min(5,r.rating))+'</span></div><h3><a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(r.title)+' ↗</a></h3><p class="summary">'+esc(more?r.summary.slice(0,190)+'…':r.summary)+'</p>'+(more?'<details class="extra"><summary>展开完整摘要</summary><p>'+esc(r.summary)+'</p></details>':'')+(reason?'<div class="reason"><strong>为什么值得关注</strong>'+esc(reason)+'</div>':'')+'<div class="tags">'+r.tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join('')+'</div>'+(r.meta?'<p class="note">'+esc(r.meta)+'</p>':'')+'<div class="card-bottom"><div class="source">'+esc(source)+' '+r.links.map((l,i)=>'<a href="'+esc(safeURL(l.url))+'" target="_blank" rel="noopener noreferrer">'+(i?'来源 '+(i+1):'阅读原文')+' ↗</a>').join(' · ')+'</div><button class="bookmark" data-save="'+esc(r.id)+'" aria-pressed="'+saved.has(r.id)+'" aria-label="'+(saved.has(r.id)?'取消收藏：':'收藏：')+esc(r.title)+'"><svg viewBox="0 0 24 24" fill="'+(saved.has(r.id)?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span>'+(saved.has(r.id)?'已收藏':'收藏')+'</span></button></div></article>';
 }
 function render(){
- const pool=base(),list=pool.filter(r=>category==='all'||r.category===category).sort((a,b)=>(b.batch||'').localeCompare(a.batch||''));
+ const pool=base(),list=pool.filter(r=>category==='all'||r.category===category).sort((a,b)=>(b.batch||'').localeCompare(a.batch||'')||(/^\d{2}-\d{2}$/.test(b.date)?b.date:'').localeCompare(/^\d{2}-\d{2}$/.test(a.date)?a.date:''));
  $('categories').innerHTML=[['all','全部'],...Object.entries(categories)].map(([key,label])=>'<button class="chip" data-cat="'+key+'" aria-pressed="'+(category===key)+'">'+label+'<span class="count">'+(key==='all'?pool.length:pool.filter(r=>r.category===key).length)+'</span></button>').join('');
- $('articles').innerHTML=list.slice(0,limit).map(card).join('');
+ $('articles').innerHTML=EmiliaTimeline.render(list.slice(0,limit),{key:r=>r.batch,label:'收录日期 · 当前显示',stamp:r=>/^\d{2}-\d{2}$/.test(r.date)?'报道 '+r.date:'日期未详',card});
  $('empty').hidden=list.length>0;$('load').hidden=list.length<=limit;
  $('load').textContent='继续阅读 · 还有 '+Math.max(0,list.length-limit)+' 条';
  $('section-heading').textContent=onlySaved?'我的收藏':category!=='all'?categories[category]:$('scope').value==='latest'?'最新一期':'历史资讯';
@@ -92,7 +93,7 @@ let searchTimer;$('search').addEventListener('input',()=>{clearTimeout(searchTim
 ['scope','rating'].forEach(id=>$(id).addEventListener('change',()=>{limit=12;render();}));
 $('saved').addEventListener('click',()=>{onlySaved=!onlySaved;if(onlySaved){$('scope').value='all';category='all';$('search').value='';$('rating').value='0';}limit=12;render();});
 $('reset').addEventListener('click',reset);$('empty-reset').addEventListener('click',()=>{reset();$('search').focus();});
-$('load').addEventListener('click',()=>{const previous=limit;limit+=12;render();const next=$('articles').children[previous];if(next){next.querySelector('h3 a').focus({preventScroll:true});next.scrollIntoView({block:'start'});}});
+$('load').addEventListener('click',()=>{const previous=limit;limit+=12;render();const next=$('articles').querySelectorAll('article.card')[previous];if(next){next.querySelector('h3 a').focus({preventScroll:true});next.scrollIntoView({block:'start'});}});
 $('top').addEventListener('click',()=>{window.scrollTo({top:0});document.querySelector('.brand').focus({preventScroll:true});});
 window.addEventListener('scroll',()=>{$('top').hidden=scrollY<650;},{passive:true});
 $('latest-count').textContent=records.filter(r=>r.batch===latest).length;render();
